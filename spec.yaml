@@ -6,8 +6,10 @@ info:
     \ You can get and change the app token from the [Mesibo Console](https://mesibo.com/console)."
   version: "1.0"
   title: "Mesibo Backend APIs "
+schemes:
+    - https
 host: "api.mesibo.com"
-basePath: "/"
+basePath: ""
 tags:
 - name: "User Management APIs"
   description: "Create, Edit and Delete Users"
@@ -15,11 +17,11 @@ tags:
   description: "Create, Edit Group Members"  
 
 paths:
-  /api.php:
+  /api.php?op=useradd:
     post:
       tags:
       - "User Management APIs"
-      summary: "**useradd** Add a User or Regenerate a User Access Token"
+      summary: "Add a User or Regenerate a User Access Token"
       description: "To enable real-time communication between your users, you need to let mesibo know about each of your users. Mesibo will create an access token for each user and give it to you which you can send it to your users. Your user can then use this access token in Mesibo Real-time APIs using setAccessToken function."
       operationId: "useradd"
       consumes:
@@ -27,12 +29,6 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "op"
-        in: "query"
-        description: "Operation to perform"
-        required: true
-        type: "string"
-        default: "useradd"
       - name: "token"
         in: "query"
         description: "Application Token obtained from mesibo console"
@@ -73,181 +69,115 @@ paths:
         '200':
           description: A User object
 
-  /api.php/userdel:
+  /api.php?op=userset:
     post:
       tags:
       - "User Management APIs"
-      summary: "**useradd** Add a User or Regenerate a User Access Token"
-      description: "To enable real-time communication between your users, you need to let mesibo know about each of your users. Mesibo will create an access token for each user and give it to you which you can send it to your users. Your user can then use this access token in Mesibo Real-time APIs using setAccessToken function."
-      operationId: "useradd"
+      summary: "Edit a User"
+      description: "Edit an existing user using the `UID` obtained from `useradd` operation."
+      operationId: "userset"
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - name: "op"
-        in: "query"
-        description: "Operation to perform"
-        required: true
-        type: "string"
-        default: "useradd"
       - name: "token"
         in: "query"
         description: "Application Token obtained from mesibo console"
         required: true
         type: "string"
-      - name: "addr"
+      - name: "uid"
         in: "query"
-        description: "User Address (e.g phone number, email address, etc.)"
+        description: "User ID obtained in add user operation"
         required: true
-        type: "string"
-      - name: "appid"
-        in: "query"
-        description: "Android package name or iOS Bundle id. The generated token will be applicable for the app having this package name or Bundle id only. For all other platforms, you can pass any unique string, and the same need to be passed to `setAppName` function."
-        required: true
-        type: "string"
-      - name: "expiry"
-        in: "query"
-        description: "in minutes, default 1 year"
-        required: false
         type: "integer"
-        format: "int64"
-        default: 525600
+      - name: "flag"
+        in: "query"
+        description: "Flags"
+        required: true
+        type: "string"
       - name: "active"
         in: "query"
-        description: "enable user, default 1 (active) "
-        required: false
-        type: "integer"
-        format: "int64"
-        default: 1
-      - name: "groups"
-        in: "query"
-        description: "Maximum Groups"
-        required: false
-        type: "integer"
-        format: "int64"
-
+        description: "1 to enable, 0 to disable"
+        required: true
+        type: "integer"                
       responses:
         '200':
           description: A User object          
 
-    
-    get:
-      tags:
-      - "User Management APIs"
-      summary: "**useradd** Add a User or Regenerate a User Access Token"
-      description: "To enable real-time communication between your users, you need to let mesibo know about each of your users. Mesibo will create an access token for each user and give it to you which you can send it to your users. Your user can then use this access token in Mesibo Real-time APIs using setAccessToken function."
-      operationId: "useradd2"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "op"
-        in: "query"
-        description: "Operation to perform"
-        required: true
-        type: "string"
-        default: "useradd"
-      - name: "token"
-        in: "query"
-        description: "Application Token obtained from mesibo console"
-        required: true
-        type: "string"
-      - name: "addr"
-        in: "query"
-        description: "User Address (e.g phone number, email address, etc.)"
-        required: true
-        type: "string"
-      - name: "appid"
-        in: "query"
-        description: "Android package name or iOS Bundle id. The generated token will be applicable for the app having this package name or Bundle id only. For all other platforms, you can pass any unique string, and the same need to be passed to `setAppName` function."
-        required: true
-        type: "string"
-      - name: "expiry"
-        in: "query"
-        description: "in minutes, default 1 year"
-        required: false
-        type: "integer"
-        format: "int64"
-        default: 525600
-      - name: "active"
-        in: "query"
-        description: "enable user, default 1 (active) "
-        required: false
-        type: "integer"
-        format: "int64"
-        default: 1
-      - name: "groups"
-        in: "query"
-        description: "Maximum Groups"
-        required: false
-        type: "integer"
-        format: "int64"
-
-      responses:
-        '200':
-          description: A User object
-                  
-
-    patch:
-      tags:
-      - "User Management APIs"
-      summary: "**useradd** Add a User or Regenerate a User Access Token"
-      description: "To enable real-time communication between your users, you need to let mesibo know about each of your users. Mesibo will create an access token for each user and give it to you which you can send it to your users. Your user can then use this access token in Mesibo Real-time APIs using setAccessToken function."
-      operationId: "userad3"
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - name: "op"
-        in: "query"
-        description: "Operation to perform"
-        required: true
-        type: "string"
-        default: "useradd"
-      - name: "token"
-        in: "query"
-        description: "Application Token obtained from mesibo console"
-        required: true
-        type: "string"
-      - name: "addr"
-        in: "query"
-        description: "User Address (e.g phone number, email address, etc.)"
-        required: true
-        type: "string"
-      - name: "appid"
-        in: "query"
-        description: "Android package name or iOS Bundle id. The generated token will be applicable for the app having this package name or Bundle id only. For all other platforms, you can pass any unique string, and the same need to be passed to `setAppName` function."
-        required: true
-        type: "string"
-      - name: "expiry"
-        in: "query"
-        description: "in minutes, default 1 year"
-        required: false
-        type: "integer"
-        format: "int64"
-        default: 525600
-      - name: "active"
-        in: "query"
-        description: "enable user, default 1 (active) "
-        required: false
-        type: "integer"
-        format: "int64"
-        default: 1
-      - name: "groups"
-        in: "query"
-        description: "Maximum Groups"
-        required: false
-        type: "integer"
-        format: "int64"
-
-      responses:
-        '200':
-          description: A User object
-
+  /api.php?op=userdel:
     delete:
+      tags:
+      - "User Management APIs"
+      summary: "Delete a User"
+      description: "Edit an existing user using the `UID` obtained from `useradd` operation."
+      operationId: "userdel"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "query"
+        description: "Application Token obtained from mesibo console"
+        required: true
+        type: "string"
+      - name: "uid"
+        in: "query"
+        description: "User ID obtained in add user operation"
+        required: true
+        type: "integer"
+      - name: "flag"
+        in: "query"
+        description: "Flags"
+        required: true
+        type: "string"
+      - name: "active"
+        in: "query"
+        description: "1 to enable, 0 to disable"
+        required: true
+        type: "integer"                
+      responses:
+        '200':
+          description: A User object
+    put:
+      tags:
+      - "User Management APIs"
+      summary: "Delete a User Access Token without deleting a user"
+      description: "Delete an existing user access token without deleting a user. User will be logged-out but will continue to receive messages which will be delivered when user logs-in next time with a new token."
+      operationId: "userdelToken"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "token"
+        in: "query"
+        description: "Application Token obtained from mesibo console"
+        required: true
+        type: "string"
+      - name: "uid"
+        in: "query"
+        description: "User ID obtained in add user operation"
+        required: true
+        type: "integer"
+      - name: "flag"
+        in: "query"
+        description: "Flags"
+        required: true
+        type: "string"
+      - name: "active"
+        in: "query"
+        description: "1 to enable, 0 to disable"
+        required: true
+        type: "integer"                
+      responses:
+        '200':
+          description: A User object      
+   
+
+
+    get:
       tags:
       - "Group Management APIs"
       summary: "**useradd** Add a User or Regenerate a User Access Token"
