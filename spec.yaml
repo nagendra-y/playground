@@ -15,7 +15,7 @@ schemes:
 - "https"
 - "http"
 paths:
-  api.php:
+  /api.php:
     post:
       tags:
       - "User Management APIs"
