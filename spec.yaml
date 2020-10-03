@@ -14,7 +14,17 @@ tags:
 - name: "User Management APIs"
   description: "Create, Edit and Delete Users"
 - name: "Group Management APIs"
-  description: "Create, Edit Group Members"  
+  description: "Create, Edit Group Members"
+
+  
+securityDefinitions:
+  AppTokenAuth:
+    type: "apiKey"
+    name: "token"
+    in: "query"
+
+security:
+ - AppTokenAuth: []     
 
 paths:
   /api.php?op=useradd:
@@ -29,11 +39,11 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - name: "token"
-        in: "query"
-        description: "Application Token obtained from mesibo console"
-        required: true
-        type: "string"
+      # - name: "token"
+      #   in: "query"
+      #   description: "Application Token obtained from mesibo console"
+      #   required: true
+      #   type: "string"
       - name: "addr"
         in: "query"
         description: "User Address (e.g phone number, email address, etc.)"
