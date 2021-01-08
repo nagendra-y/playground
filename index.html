@@ -1,103 +1,124 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Mesibo Playground</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="dist/swagger-ui.css">
-  <link rel="stylesheet" type="text/css" href="custom.css">
-  </head>
-  <body> 
-	  <nav class="navbar navbar-light" style="background-color: #00868b;">
-		  <a href="https://mesibo.com/"><img class="logo" src="https://mesibo.com/images/mesibo-logo-white.png" alt="Mesibo" title="Mesibo" style="width: 16opx; height: 50px;"></a>
-		  <span class="navbar-brand mb-0 h1" style="color:white"> Backend APIs</span>
-	  </nav>
-	  <br>
-	  <div style="margin-left: 95px;">
-	  <p>This is a playground for trying out <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/documentation/api/backend-api">Mesibo Backend APIs</a>.<br>
-	  You need an <code>Application token</code> to try the APIs. You can get token from the <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/console">Mesibo Console</a>.<br>
-	  <img src="https://mesibo.com/documentation/tutorials/get-started/images/app-token.jpg" width="900">
-	  <div class="form-group">
-		  <label for="usr"><strong>Enter the App Token:<strong></label>
-		  <input style="width:900px;" type="text" class="form-control" id="apptoken">
-	  </div>
-	  <button type="button" class="btn btn-success" onclick="setToken()">Save</button></div>
-	  <div id="swagger-ui"></div>
-	  <script src="dist/swagger-ui-bundle.js"></script>
-	  <script src="dist/swagger-ui-standalone-preset.js"></script>
-	  <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
-	  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>Mesibo Playground</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="dist/swagger-ui.css">
+		<link rel="stylesheet" type="text/css" href="custom.css">
+	</head>
+	<body> 
+		<nav class="navbar navbar-light" style="background-color: #00868b;">
+			<a href="https://mesibo.com/"><img class="logo" src="https://mesibo.com/images/mesibo-logo-white.png" alt="Mesibo" title="Mesibo" style="width: 16opx; height: 50px;"></a>
+			<span class="navbar-brand mb-0 h1" style="color:white"> Backend APIs</span>
+		</nav>
+		<br>
+		<div style="margin-left: 95px;">
+			<p>This is a playground for trying out <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/documentation/api/backend-api">Mesibo Backend APIs</a>.<br>
+			You need an <code>Application token</code> to try the APIs. You can get token from the <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/console">Mesibo Console</a>.<br>
+			<img src="https://mesibo.com/documentation/tutorials/get-started/images/app-token.jpg" width="900">
+			<!--
+	   <div class="form-group">
+	   <label for="usr"><strong>Enter the App Token:<strong></label>
+	   <input style="width:900px;" type="text" class="form-control" id="apptoken">
+	   </div>
+			-->
+			<br>
+			<br>
+			<button type="button" class="btn btn-success" onclick="setToken()">Click to enter App token</button>
+		</div>
+		<div id="swagger-ui"></div>
+		<script src="dist/swagger-ui-bundle.js"></script>
+		<script src="dist/swagger-ui-standalone-preset.js"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 
-	  <script>
-		  window.onload = function() {
-			  const ui = SwaggerUIBundle({
-				  url: "spec.yaml",
-				  dom_id: '#swagger-ui',
-				  presets: [
-					  SwaggerUIBundle.presets.apis,
-					  SwaggerUIStandalonePreset
-				  ]
-			  })
+		<script>
+			window.onload = function() {
+				const ui = SwaggerUIBundle({
+					url: "spec.yaml",
+					dom_id: '#swagger-ui',
+					presets: [
+						SwaggerUIBundle.presets.apis,
+						SwaggerUIStandalonePreset
+					]
+				})
 
-			  window.ui = ui;
-			  // To do:
-			  // When an API is selected get into try mode by default
-			  //$(".try-out__btn").click()
-		  }
+				window.ui = ui;
+				// To do:
+				// When an API is selected get into try mode by default
+				//$(".try-out__btn").click()
+			}
 
-		  function setToken(){
-		  	console.log("setToken");
+function setToken(){
+	console.log("setToken");
+	/*
+
 			var token = document.getElementById("apptoken");
 			if(!token)
 			   return;
 
 			token = token.value;
 			console.log(token);
+	 */
+	var auth = document.getElementsByClassName("authorize")[0];
+	if(!auth)
+		return;
 
-			var auth = document.getElementsByClassName("authorize")[0];
-			if(!auth)
-			  return;
-			
-			console.log(auth);
-			auth.click();
+	console.log(auth);
+	auth.click();
+	
+	document.getElementsByTagName("h3")[0].textContent = "Enter App token";
+	document.getElementsByTagName("h4")[0].style.display = "None";
+	
+	document.getElementsByClassName("wrapper")[3].style.display = "None";	
+	document.getElementsByClassName("wrapper")[4].style.display = "None";	
+	
+	var setAuth = document.getElementsByClassName("auth")[0];
+	if(!setAuth)
+		return;
+	
+	setAuth.innerText = "Save";
+/**
 
-			var auth2 = document.getElementsByTagName("input")[1];
-			if(!auth2)
-			  return;
+	var auth2 = document.getElementsByTagName("input")[1];
+	if(!auth2)
+		return;
 
-			  var input = auth2; 
-			  input.select(); // you can also use input.focus()
-			  input.value="";
+	var input = auth2; 
+	input.select(); // you can also use input.focus()
+	input.value="";
 
-			  var text = token;
-			  var l=text.length;
-			  var current = 0;
-			  var time = 200;
+	var text = token;
+	var l=text.length;
+	var current = 0;
+	var time = 200;
 
-			  var write_text = function() {
-				  input.value+=text[current];
-				  if(current < l-1) {
-					  current++;
-					  setTimeout(function(){write_text()},time);
-				  } else {
-					  input.setAttribute('value',input.value);
-					  var setAuth = document.getElementsByClassName("auth")[0];
-					  if(!setAuth)
-						  return;
+	var write_text = function() {
+		input.value+=text[current];
+		if(current < l-1) {
+			current++;
+			setTimeout(function(){write_text()},time);
+		} else {
+			input.setAttribute('value',input.value);
+			var setAuth = document.getElementsByClassName("auth")[0];
+			if(!setAuth)
+				return;
 
-					  console.log(setAuth);
+			console.log(setAuth);
 
-					  setAuth.click();
-					  console.log("Set token: ", token);
-				  }
-			  }
-			  setTimeout(function(){write_text()},time);
+			setAuth.click();
+			console.log("Set token: ", token);
+		}
+	}
+	setTimeout(function(){write_text()},time);
 
 
-			console.log(auth2);
-			
-		  }
-	  </script>
-  </body>
+	console.log(auth2);
+	**/
+
+}
+		</script>
+	</body>
 </html>
