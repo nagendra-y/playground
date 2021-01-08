@@ -1,13 +1,12 @@
 ---
 swagger: "2.0"
-info:
-  description: "This is a playground for trying out [Mesibo Backend APIs](https://mesibo.com/documentation/api/backend-api).\n
-    \ You need an `Application token` to try the APIs.\
-    \ You can get and change the app token from the [Mesibo Console](https://mesibo.com/console).\n
-    \ First, Click on the `Authorize` button and fill in the token value.\n
-    \ To try an API, click on the API and then click on `Try it out` button"
-  version: "1.0"
-  title: "Mesibo Backend APIs "
+#info:
+# description: "This is a playground for trying out [Mesibo Backend APIs](https://mesibo.com/documentation/api/backend-api).\n
+#   \ You need an `Application token` to try the APIs.\
+#   \ You can get the token from the [Mesibo Console](https://mesibo.com/console).\n"
+# version: "1.0"
+# title: "Mesibo Backend APIs "
+
 schemes:
     - https
 host: "api.mesibo.com"
@@ -20,13 +19,13 @@ tags:
 
   
 securityDefinitions:
-  AppTokenAuth:
+  AppToken:
     type: "apiKey"
     name: "token"
     in: "query"
 
 security:
- - AppTokenAuth: []     
+ - AppToken: []     
 
 paths:
   /api.php?op=useradd:
