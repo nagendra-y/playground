@@ -186,6 +186,7 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 			return;
 
 		$scope.token = t.value;
+		window.scrollBy(0, 200);
 	}
 
 	$scope.copyRequestUrl = function(api){
