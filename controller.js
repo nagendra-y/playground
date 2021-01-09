@@ -101,9 +101,9 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 		if(!root)
 			return;
 
-		var url = root;
-		if(api.op)
-			url = url + "&op="+ api.op;
+		var url = "";
+		if(root && api.op)
+			url = root + "?op="+ api.op;
 
 		var params = api.params;
 		if(!params)
@@ -123,6 +123,8 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 			}
 		}
 
+		if($scope.token)
+			url = url + "&token=" + $scope.token;
 		return url; 
 	}
 
@@ -139,7 +141,7 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 		var eleUrl = document.getElementById("request-url-"+ api.op);
 		if(!eleUrl)
 			return;
-
+		
 		eleUrl.value = url;
 	}
 
@@ -176,5 +178,41 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 		}
 			
 	}
+	
+	$scope.setToken = function(){
+		var t = document.getElementById("apptoken");
+		if(!(t && t.value))
+			return;
+
+		$scope.token = t.value;
+	}
+
+	$scope.copyRequestUrl = function(api){
+		if(!(api && api.op))
+			return;
+
+		//https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
+		/* Get the text field */
+		var copyText = document.getElementById("request-url-"+ api.op);
+
+		/* Select the text field */
+		copyText.select();
+		copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+		/* Copy the text inside the text field */
+		document.execCommand("copy");
+
+		/* Alert the copied text */
+		console.log("Copied: " + copyText.value);
+	}
+
+	$scope.openRequestUrl = function(api){
+		var request_url = $scope.getRequestUrl(api);
+		if(!request_url)
+			return;
+		window.open(request_url, '_blank');
+	}
+
+
 }]);
 
