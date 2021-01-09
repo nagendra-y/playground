@@ -9,15 +9,13 @@
 	<body ng-app="MesiboPlayground" id="mesiboapiplay" ng-controller="AppController"> 
 		<nav class="navbar navbar-light" style="background-color: #00868b;">
 			<a href="https://mesibo.com/"><img class="logo" src="https://mesibo.com/images/mesibo-logo-white.png" alt="Mesibo" title="Mesibo" style="width: 16opx; height: 50px;"></a>
-			<span class="navbar-brand mb-0 h1" style="color:white"> Backend APIs</span>
+			<span class="navbar-brand mb-0 h1" style="color:white"> API Playground</span>
 		</nav>
 		<br>
 		<div style="margin-left: 95px;">
 			<p>This is a playground for trying out <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/documentation/api/backend-api">Mesibo Backend APIs</a>.<br>
-			You need an <code>Application token</code> to try the APIs. You can get token from the <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/console">Mesibo Console</a>.<br>
-			<!--
+			You need an <code>Application token</code> to try the APIs. You can get the token from <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/console">Mesibo Console</a>.<br>
 			<img src="https://mesibo.com/documentation/tutorials/get-started/images/app-token.jpg" width="900">
-			-->
 			<div class="form-group">
 				<label for="usr"><strong>Enter the App Token:</strong></label>
 				<input style="width:900px;" type="text" class="form-control" id="apptoken">
@@ -34,14 +32,14 @@
 						</h5>
 					</div>
 
-					<div id="collapse-{{$index}}" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+					<div id="collapse-{{$index}}" class="collapse" ng-class="{'show': false && $index == 0}" aria-labelledby="headingOne" data-parent="#accordion">
 						<div class="card-body">
 							<span>{{apis[$index].description}}<span>
 							<br>
 							<br>
 							<div>
 								<span><strong> Request URL: </strong></span>
-								<input type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000;width: 100%; background-color: #3b4151; color: white;" id="rurl" value="https://api.mesibo.com/api.php?op=useradd&addr=abc&appid=abc&expiry=525600&active=1">
+								<input type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000;width: 100%; background-color: #3b4151; color: white;" id="request-url-{{api.op}}" ng-value="getRequestUrl(apis[$index])">
 							</div>
 							
 							<br>
@@ -51,12 +49,23 @@
 								<br>
 
 								<div ng-repeat="p in a.params" style="margin-top: 2px;">
-									<span>{{p.description}}</span>
+									<span id="param-description-{{p.name}}">{{p.description}}</span>
+									
+									<div class="dropdown" ng-if="p.platforms">
+										<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="platform-menu-{{p.name}}">
+											Select a Platform 
+										</button>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{p.name}}">
+											<a ng-click="updateDescription(p, platform)" ng-repeat="platform in p.platforms" class="dropdown-item" href="#">{{platform}}</a>
+										</div>
+									</div>
+									<br>
 									<div class="input-group mb-3">
 										<div class="input-group-prepend">
-											<span class="input-group-text" id="basic-addon1">{{p.name}}</span>
+											<span class="input-group-text" >{{p.name}}</span>
 										</div>
-										<input type="text" class="form-control" placeholder="{{p.placeholder}}">
+										<input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-change="updateRequestUrl(a, p)" ng-if="p.type == 'String'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-value="p.default" ng-model="p.default">
+										<input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-change="updateRequestUrl(a, p)"  ng-if="p.type == 'Number'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-value="p.default" ng-model="p.default">
 									</div>
 								</div>
 							</div>
@@ -67,7 +76,9 @@
 		</div>
 
 		<script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+		    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
 		<script src="controller.js" type="text/javascript"></script>	
 	</body>
