@@ -21,6 +21,8 @@ playground.directive('customAutofocus', function($timeout) {
 
 playground.controller('AppController', ['$scope', '$window', '$anchorScroll', function ($scope, $window, $anchorScroll) {
 	$scope.root = "https://api.mesibo.com/api.php";
+	$scope.token = "";
+
 	$scope.apis = [
 		{	
 			"op" : "useradd",
@@ -123,8 +125,7 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 			}
 		}
 
-		if($scope.token)
-			url = url + "&token=" + $scope.token;
+		url = url + "&token=" + $scope.token;
 		return url; 
 	}
 
