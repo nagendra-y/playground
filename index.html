@@ -1,96 +1,111 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width">
-		<title>Mesibo Playground</title>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" />
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
-		<style>
-			sup { vertical-align: top; position: relative; top: -0.5em; }
-		</style>
-	</head>
-	<body ng-app="MesiboPlayground" id="mesiboapiplay" ng-controller="AppController"> 
-		<nav class="navbar navbar-light" style="background-color: #00868b;">
-			<a href="https://mesibo.com/"><img class="logo" src="https://mesibo.com/images/mesibo-logo-white.png" alt="Mesibo" title="Mesibo" style="width: 16opx; height: 50px;"></a>
-			<span class="navbar-brand mb-0 h1" style="color:white"> API Playground</span>
-		</nav>
-		<br>
-		<div style="margin-left: 95px;">
-			<p>This is an interactive playground for trying out <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/documentation/api/backend-api">Mesibo Backend APIs</a>.<br>
-			You need an <code>Application token</code> to try the APIs. You can get the token from <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/console">Mesibo Console</a>.<br>
-			<img src="https://mesibo.com/documentation/tutorials/get-started/images/app-token.jpg" width="900">
-			<div class="form-group">
-				<label for="usr"><strong>Enter the App Token:</strong></label>
-				<input style="width:900px;" type="text" class="form-control" id="apptoken">
-			</div>
-			<button type="button" class="btn btn-success" ng-click="setToken()">Save</button>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Mesibo Playground</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <style>
+      sup { vertical-align: top; position: relative; top: -0.5em; }
+    </style>
+  </head>
+  <body ng-cloak="apis" ng-app="MesiboPlayground" id="mesiboapiplay" ng-controller="AppController">
+    <nav class="navbar navbar-light" style="background-color: #00868b;">
+      <a href="https://mesibo.com/"><img class="logo" src="https://mesibo.com/images/mesibo-logo-white.png" alt="Mesibo" title="Mesibo" style="width: 16opx; height: 50px;"></a>
+      <span class="navbar-brand mb-0 h1" style="color:white"> API Playground</span>
+    </nav>
+    <br>
+    <div style="margin-left: 95px;">
+      <p>This is an interactive playground for trying out <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/documentation/api/backend-api">Mesibo Backend APIs</a>.<br>
+        You need an <code>Application token</code> to try the APIs. You can get the token from <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/console">Mesibo Console</a>.<br>
+        <img src="https://mesibo.com/documentation/tutorials/get-started/images/app-token.jpg" width="900">
+      <div class="form-group">
+        <label for="usr"><strong>Enter the App Token:</strong></label>
+        <input style="width:900px;" type="text" class="form-control" id="apptoken">
+      </div>
+      <button type="button" class="btn btn-success" ng-click="setToken()">Save</button>
+      <div id="accordion" ng-repeat="a in apis track by $index" style="margin-top: 5px;">
+        <div class="card" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000;border-color: #49cc90;background: rgba(73,204,144,.1);">
+          <div class="card-header" id="heading-$index">
+            <h5 class="mb-0">
+              <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-{{$index}}" aria-expanded="false" aria-controls="collapse-{{$index}}">
+              {{apis[$index].title}}
+              </button>
+            </h5>
+          </div>
+          <div id="collapse-{{$index}}" class="collapse" ng-class="{'show': $index == 0}" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+              <span>{{apis[$index].description}}<span>
+              <br>
+              <br>
+              <div class="row">	              
+	              <div class="col-6 my-1">
+	                <span> <strong>Parameters: </strong> </span>
+	                <br>	               
+	                <div ng-repeat="p in a.params" style="margin-top: 2px;">
+	                	<div class="dropdown" ng-if="p.platforms" id="platforms-list-{{p.name}}">
+		                    <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="platform-menu-{{p.name}}">
+		                    Select a Platform 
+		                    </button>
+		                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{p.name}}">
+		                      <a ng-click="updateDescription(p, platform)" ng-repeat="platform in p.platforms" class="dropdown-item" href="#">{{platform}}</a>
+		                    </div>
+	                    </div>
+		                <span id="param-description-{{p.name}}">{{p.description}}</span>
+	                  
+		                <div class="input-group mb-3 my-1">
+		                	<div class="input-group-prepend">
+		                      <span class="input-group-text" >{{p.name}}<sup ng-if="p.required" style="color:red; font-size: 10px; font-family: 'monospace';" > &nbsp; *required</sup></span>
+		                    </div>
+		                    <input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-change="updateRequestUrl(a, p)" ng-if="p.type == 'String'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-value="p.default" ng-model="p.default" ng-required="p.required">
+		                    <input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-change="updateRequestUrl(a, p)"  ng-if="p.type == 'Number'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-value="p.default" ng-model="p.default" ng-required="p.required">
+		                </div>
+	                </div>
+	              </div>
+	              <div class="col-6">
+	                <span><strong> Request: </strong></span>
+	                <br>	             
+	                
+	                <div class="row h-50 no-gutters">
+		                <div class="form-group col-12">
+		                    <div class="input-group">
+		                      <textarea  rows="6" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000; width: 100%; background-color: #162d2c; color: white;" id="request-{{apis[$index].op}}" ng-value="getRequestUrl(apis[$index])">
+		                      </textarea>
+			                </div>
+			                <span><button ng-click="copyText('request-'+ apis[$index].op)" class="btn btn-primary my-1"><i class="fa fa-copy"></i> Copy Request</button></span>
+		                    <span class="mx-1"><button ng-click="runRequest(apis[$index])" class="btn btn-primary my-1"><i class="fa fa-play"></i> Execute</button>
+		                    </span>
+		                </div>
+	                </div>
 
-			<div id="accordion" ng-repeat="a in apis track by $index" style="margin-top: 5px;">
-				<div class="card" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000;border-color: #49cc90;background: rgba(73,204,144,.1);">
-					<div class="card-header" id="heading-$index">
-						<h5 class="mb-0">
-							<button class="btn btn-link" data-toggle="collapse" data-target="#collapse-{{$index}}" aria-expanded="false" aria-controls="collapse-{{$index}}">
-								{{apis[$index].title}}
-							</button>
-						</h5>
-					</div>
+	                <span><strong> Response: </strong></span>
+	                <br>	                
 
-					<div id="collapse-{{$index}}" class="collapse" ng-class="{'show': false && $index == 0}" aria-labelledby="headingOne" data-parent="#accordion">
-						<div class="card-body">
-							<span>{{apis[$index].description}}<span>
-									<br>
-									<br>
-									<div>
-										<span><strong> Request URL: </strong></span>
-										<div class="form-group">
-											<div class="input-group">
-												<input type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000;width: 100%; background-color: #3b4151; color: white;" id="request-url-{{apis[$index].op}}" ng-value="getRequestUrl(apis[$index])">
-												<span><button ng-click="copyRequestUrl(apis[$index])" class="btn btn-primary my-1"><i class="fa fa-copy"></i> Copy URL</button></span>
-												<span class="mx-1"><button ng-click="openRequestUrl(apis[$index])" class="btn btn-primary my-1"><i class="fa fa-external-link"></i> Try</button></span>
-											</div>
-										</div>
+	                <div class="row h-50 no-gutters">
+		                <div class="form-group col-12">
+		                  <div class="input-group">
+		                    <textarea rows="6" type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000;width: 100%; background-color: #162d2c; color: white;" id="response-{{apis[$index].op}}">
+		                    </textarea>		                    
+		                  </div>
+		                  <span><button ng-click="copyText('response-'+ apis[$index].op)" class="btn btn-primary my-1"><i class="fa fa-copy"></i> Copy Response</button></span>
+		                </div>
+	                </div>
 
-									</div>
-
-									<div class="my-1">
-										<span> <strong>Parameters: </strong> </span>
-										<br>
-										<br>
-
-										<div ng-repeat="p in a.params" style="margin-top: 2px;">
-											<span id="param-description-{{p.name}}">{{p.description}}</span>
-
-											<div class="dropdown" ng-if="p.platforms">
-												<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="platform-menu-{{p.name}}">
-													Select a Platform 
-												</button>
-												<div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{p.name}}">
-													<a ng-click="updateDescription(p, platform)" ng-repeat="platform in p.platforms" class="dropdown-item" href="#">{{platform}}</a>
-												</div>
-											</div>
-
-											<div class="input-group mb-3 my-1">
-												<div class="input-group-prepend">
-													<span class="input-group-text" >{{p.name}}<sup ng-if="p.required" style="color:red">*</sup></span>
-												</div>
-												<input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-change="updateRequestUrl(a, p)" ng-if="p.type == 'String'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-value="p.default" ng-model="p.default" ng-required="p.required">
-												<input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-change="updateRequestUrl(a, p)"  ng-if="p.type == 'Number'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-value="p.default" ng-model="p.default" ng-required="p.required">
-											</div>
-										</div>
-									</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
-
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
-		<script src="controller.js" type="text/javascript"></script>	
-	</body>
+	              </div>
+	          </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="controller.js" type="text/javascript"></script>	
+  </body>
 </html>

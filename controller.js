@@ -19,9 +19,13 @@ playground.directive('customAutofocus', function($timeout) {
 	};
 })
 
+const RESULT_OK = 0;
+const RESULT_FAIL = -1;
+
 playground.controller('AppController', ['$scope', '$window', '$anchorScroll', function ($scope, $window, $anchorScroll) {
 	$scope.root = "https://api.mesibo.com/api.php";
 	$scope.token = "";
+	$scope.selected_platform = {};
 
 	$scope.apis = [
 		{	
@@ -139,7 +143,7 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 		if(!url)
 			return;
 
-		var eleUrl = document.getElementById("request-url-"+ api.op);
+		var eleUrl = document.getElementById("request-"+ api.op);
 		if(!eleUrl)
 			return;
 		
@@ -148,30 +152,32 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 
 	$scope.updateDescription = function(param, platform){
 		if(!(param && platform))
-			return;
+			return RESULT_FAIL;		
 
 		if(!param.name)
-			return;
+			return RESULT_FAIL;
+
+		$scope.selected_platform[param.name] = platform;
 
 		var e = document.getElementById("platform-menu-"+ param.name);
 		if(!e)
-			return;
+			return RESULT_FAIL;
 		e.textContent = platform;
 
 		var alt = param.alt;
 		if(!alt)
-			return;
+			return RESULT_FAIL;
 
 		var newDescription = alt[platform].description;
 		if(!newDescription)
-			return;
+			return RESULT_FAIL;
 
 		var param_description = document.getElementById("param-description-"+ param.name);
 		if(!param_description)
-			return;
+			return RESULT_FAIL;
 
 		param_description.innerHTML = newDescription;
-		console.log("updateDescription", newDescription, param_description);
+		// console.log("updateDescription", newDescription, param_description);
 		
 		if(document.getElementById("input-param-"+ param.name)){
 			if(alt[platform].placeholder)
@@ -189,14 +195,118 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 		window.scrollBy(0, 200);
 	}
 
-	$scope.copyRequestUrl = function(api){
-		if(!(api && api.op))
+	$scope.validateAppid = function(api, param){
+
+	}
+
+	$scope.validateParam = function(api, param){
+		if(!(api && param))
+			return RESULT_FAIL;
+
+		if(!param.name)
+			return RESULT_FAIL;
+
+		var input = document.getElementById("input-param-" + param.name);
+		if(!input)
+			return RESULT_FAIL;
+
+		var value = input.value;
+
+		if(param.required){
+			if(value === ""){
+				input.focus();
+				toastr.error("Please provide a valid input for the parameter "+ param.name);							
+				return RESULT_FAIL;
+			}			
+		}
+
+		if(param.name === "appid"){
+			//Special validation for appid
+			if(!value)
+				return RESULT_FAIL;
+
+			var platform = $scope.selected_platform[param.name];
+			var contains_dot = false;
+
+			if(typeof value === "string"){
+				for (var i = 0; i < value.length; i++) {
+					if(!isNaN(value[i])){
+						input.focus();
+						toastr.error("Please provide a non-numeric string value for "+ param.name);
+						return RESULT_FAIL;
+					}
+
+					if(value[i] == ".")
+						contains_dot = true;					
+				}
+			}
+
+			if(platform && !contains_dot){		
+				if(platform == "Android"){
+					input.focus();
+					toastr.error("Please provide a valid Package Name. Example, com.mesibo.androidapp");
+					return RESULT_FAIL;
+				}
+
+				if(platform == "iOS"){
+					input.focus();
+					toastr.error("Please provide a valid Bundle ID. Example, com.mesibo.iosapp");
+					return RESULT_FAIL;
+				}
+			}
+		}
+
+		return RESULT_OK;
+	}
+
+	$scope.runRequest = function(api){		
+
+		if(api.params && api.params.length){
+			for (var i = 0; i < api.params.length; i++) {
+				var p = api.params[i];
+
+				var val = $scope.validateParam(api, p);
+
+				if(RESULT_FAIL == val){
+					console.log("Invalid parameter ", p);
+					return;
+				}				
+			}
+		}
+
+		var request_url = $scope.getRequestUrl(api);
+		if(!request_url)
+			return;
+
+		fetch(request_url)
+		  .then(response => response.json())
+		  .then(data => {
+			  	console.log(data);
+			  	var eleResponse = document.getElementById("response-"+ api.op);
+				if(!eleResponse)
+					return;
+				
+				try{
+					eleResponse.value = JSON.stringify(data);
+				}
+				catch (e){
+					console.log(e);
+				}
+		  	});
+
+		
+		// window.open(request_url, '_blank');
+	}
+
+	$scope.copyText = function(ele_name){
+		if(!ele_name)
 			return;
 
 		//https://www.w3schools.com/howto/howto_js_copy_clipboard.asp
 		/* Get the text field */
-		var copyText = document.getElementById("request-url-"+ api.op);
-
+		var copyText = document.getElementById(ele_name);
+		if(!copyText)
+			return;
 		/* Select the text field */
 		copyText.select();
 		copyText.setSelectionRange(0, 99999); /* For mobile devices */
@@ -208,13 +318,7 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 		console.log("Copied: " + copyText.value);
 	}
 
-	$scope.openRequestUrl = function(api){
-		var request_url = $scope.getRequestUrl(api);
-		if(!request_url)
-			return;
-		window.open(request_url, '_blank');
-	}
-
 
 }]);
+
 
