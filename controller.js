@@ -83,15 +83,9 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"description": "Enable user, default 1 (active)",
 					"type": "number",
 					"required": false,
-					"value": 1
+					"value": 1,
+					"valueList": [0, 1]
 				},
-
-				{
-					"name": "groups",
-					"description": "Maximum Groups",
-					"type": "number",
-					"required": false,
-				}
 			],
 
 			"response" : {"OK": "Returns a user object on success"}
@@ -473,13 +467,15 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 	}
 
 	$scope.validateParam = function(api, param){
-		if(!(api && param))
+		if(!(api && param)){
 			return RESULT_FAIL;
+		}
 
-		if(!param.name)
+		if(!param.name){
 			return RESULT_FAIL;
+		}
 
-		var input = document.getElementById("input-param-" + param.name);
+		var input = document.getElementById("input-param-"+ api.op + "-" + param.name);
 		if(!input)
 			return RESULT_FAIL;
 
