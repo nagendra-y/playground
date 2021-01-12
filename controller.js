@@ -84,7 +84,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"type": "number",
 					"required": false,
 					"value": 1,
-					"valueList": [0, 1]
+					"valueList": [1, 0]
 				},
 			],
 
@@ -118,7 +118,8 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"description": "Enable user, default 1 (active)",
 					"type": "number",
 					"required": false,
-					"value": 1
+					"value": 1,
+					"valueList": [1, 0]
 				},
 			]
 		},
@@ -184,7 +185,8 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"description": "Group Flags",
 					"type": "string",
 					"required": true,
-					"value": ""
+					"value": "0",
+					"valueList": ["0", "1", "0x20", "0x40", "0x80"]
 				},
 				{
 					"name": "expiry",
@@ -206,7 +208,8 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"description": "1 to enable, 0 to disable",
 					"type": "number",
 					"required": false,
-					"value": 1
+					"value": 1,
+					"valueList": [1, 0]
 				},
 
 			]
@@ -459,7 +462,9 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 
 		$scope.token = t.value;
 		toastr.success("Token saved. Click on the API description to try it!");
-		$scope.initApis($scope.apiJson);		
+		document.getElementById("img-apptoken").style.display = "none";
+		$scope.initApis($scope.apiJson);
+
 	}
 
 	$scope.validateAppid = function(api, param){
@@ -587,6 +592,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 		console.log("Copied: " + copyText.value);
 	}
 
+	// $scope.initApis($scope.apiJson);
 
 }]);
 
