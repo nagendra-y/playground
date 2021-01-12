@@ -27,7 +27,7 @@ const RESULT_FAIL_APPID_DOTS = 12;
 
 playground.controller('AppController', ['$scope', '$window', '$compile', '$timeout', '$anchorScroll', function ($scope, $window, $compile, $timeout, $anchorScroll) {
 	$scope.root = "https://api.mesibo.com/api.php";
-	$scope.token = "";
+	$scope.token = null;
 	$scope.selected_platform = {};
 
 	$scope.apis = [];
@@ -528,25 +528,23 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 		if(!(t && t.value))
 			return;
 
-		$scope.token = t.value;
+		var token = t.value;
 
-		var request_url = $scope.root + "?token="+ $scope.token + "&d=1&op=appstats"
+		var request_url = $scope.root + "?token="+ token + "&d=1&op=appstats"
 		fetch(request_url)
 		  .then(response => response.json())
 		  .then(data => {
 			  	console.log(data);			  	
 				try{
 					if(data.result){
-						toastr.success("Token saved. Click on the API description to try it!");
-						document.getElementById("img-apptoken").style.display = "none";
-						document.getElementById("save-token-button").classList.replace("btn-danger", "btn-success");
-						document.getElementById("save-token-button").innerText = "Get Started";
-						$scope.initApis($scope.apiJson);
+						$scope.token = token;
+						$scope.initApis($scope.apiJson);						
 					}
 					else{
-						alert("Enter a valid token");
+						$scope.token = null;
 					}
 
+					$scope.$applyAsync();
 
 				}
 				catch (e){
@@ -613,7 +611,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 
 		var value = param.value;
 
-		// console.log("checkValidParam", param, value);
+		console.log("checkValidParam", param, value);
 		var result = $scope.validateParam(param, value);
 
 		if(param.required){
@@ -709,7 +707,8 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 	}
 
 	// $scope.initApis($scope.apiJson);
-	document.getElementById("apptoken").focus();
+	if(document.getElementById("apptoken"))
+		document.getElementById("apptoken").focus();
 
 }]);
 
