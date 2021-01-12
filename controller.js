@@ -220,15 +220,76 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 			"op" : "groupset",
 			"type": "group",
 			"title" : "Edit a Group",
-			"description": "Edit an existing group using GID obtained in the group add operation.",
+			"description": "Edit an existing group using GID obtained in the <code>group add</code> operation. <br><br> Group Flags: <br> <ul> <li>0 - normal group, only members can send</li><li>1 - only selected members can send (refer add members API)</li><li>0x20 - received by one member in the round-robin fashion</li><li>0x40 - do no store group messages</li><li>0x80 - loop back to sender</li></ul> <br> To know about setting the group permissions per message type, see <a href='https://mesibo.com/documentation/api/backend-api/#group-permissions-per-message-type' target='_blank'>here</a>",
 			"requestUrl": "",
 			"params": [ 
 				{
 					"name": "gid",
 					"description": "Group ID (GID)",
 					"type": "number",
-					"required": true,
+					"required": true,					
+				},
+				{
+					"name": "type",
+					"description": "Group Permissions per message type",
+					"type": "number",
+					"required": false,
 					"value": 0
+				},
+				{
+					"name": "name",
+					"description": "Group Name",
+					"type": "string",
+					"required": false,
+					"value": ""
+				},
+				{
+					"name": "flag",
+					"description": "Group Flags",
+					"type": "string",
+					"required": true,
+					"value": "0",
+					"valueList": ["0", "1", "0x20", "0x40", "0x80"]
+				},
+				{
+					"name": "expiry",
+					"description": "In minutes, default 1 year",
+					"type": "number",
+					"required": false,
+					"value": 525600 
+				},
+				{
+					"name": "expiryext",
+					"description": "Auto extend expiry on group activity, in seconds. Default disabled",
+					"type": "number",
+					"required": false,
+					"value": 0 
+				},
+
+				{
+					"name": "active",
+					"description": "1 to enable, 0 to disable",
+					"type": "number",
+					"required": false,
+					"value": 1,
+					"valueList": [1, 0]
+				},
+
+			]
+		},
+
+		{	
+			"op" : "groupeditmembers",
+			"type": "group",
+			"title" : "Add or Remove Group Members",
+			"description": "Add or Remove Group Members using GID obtained in the group <code>add</code> operation. <br> To know about setting the group permissions per message type, see <a href='https://mesibo.com/documentation/api/backend-api/#group-permissions-per-message-type' target='_blank'>here</a>",
+			"requestUrl": "",
+			"params": [ 
+				{
+					"name": "gid",
+					"description": "Group ID (GID)",
+					"type": "number",
+					"required": true,					
 				},
 				{
 					"name": "type",
@@ -301,8 +362,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"name": "gid",
 					"description": "Group ID (GID)",
 					"type": "number",
-					"required": true,
-					"value": 0
+					"required": true,				 
 				}
 			]
 		},
@@ -318,8 +378,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"name": "gid",
 					"description": " Group ID (GID)",
 					"type": "number",
-					"required": true,
-					"value": 0
+					"required": true,					
 				},
 				{
 					"name": "count",
@@ -517,30 +576,35 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 
 	$scope.checkValidParam = function(api, param){
 		
-		if(!(api && param)){
+		if(!(api && param))
 			return;
-		}
+		
 
-		if(!param.name){
+		if(!param.name)
 			return;
-		}
+		
 
 		var value = param.value;
 
 		// console.log("checkValidParam", param, value);
 		var result = $scope.validateParam(param, value);
 
-		if(RESULT_FAIL == result)
-			toastr.error("Please provide a valid input for "+ param.name);
+		if(param.required){
+			if(RESULT_OK == result)
+				param.error = "";
 
-		if(RESULT_FAIL_APPID_NAN == result)
-			toastr.error("Please provide a non-numeric string value for "+ param.name);
+			if(RESULT_FAIL == result)
+				param.error = "Enter a valid input";		
+
+			if(RESULT_FAIL_APPID_NAN == result)
+				param.error = "Enter a non-numeric string value";
+			
+			if(RESULT_FAIL_APPID_DOTS == result)
+				param.error = "Enter a valid Package Name/Bundle ID. Example, com.mesibo.firstapp";
+		}		
 		
-		if(RESULT_FAIL_APPID_DOTS == result)
-			toastr.error("Please provide a valid Package Name/Bundle ID. Example, com.mesibo.firstapp");		
+		$scope.$applyAsync();
 	}
-
-	// "
 
 	$scope.isRequiredParamsValid = function(api){
 		if(!(api.params && api.params.length))
@@ -552,7 +616,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 			if(p.required){
 				var val = $scope.validateParam(p, p.value);
 				// console.log(p, val);
-				if(RESULT_FAIL == val){					
+				if(RESULT_FAIL == val || RESULT_FAIL_APPID_NAN == val || RESULT_FAIL_APPID_DOTS == val){					
 					return false;
 				}
 			}				
@@ -569,7 +633,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 
 				var val = $scope.validateParam(api, p);
 
-				if(RESULT_FAIL == val){
+				if(RESULT_FAIL == val || RESULT_FAIL_APPID_NAN == val || RESULT_FAIL_APPID_DOTS == val){
 					console.log("Invalid parameter ", p);
 					return;
 				}				
