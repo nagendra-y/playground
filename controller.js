@@ -41,6 +41,13 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 			"requestUrl": "",
 			"params": [ 
 				{
+					"name": "name",
+					"description": "User Name",
+					"type": "string",
+					"required": false,
+					"value": ""
+				},
+				{
 					"name": "addr",
 					"description": "User Address (e.g phone number, email address, etc.)",
 					"type": "string",

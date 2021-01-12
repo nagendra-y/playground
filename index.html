@@ -64,22 +64,15 @@
               <br>
               <br>
               <div class="row">	              
-	              <div class="col-6 my-1">
+	              <div class="col-6">
 	                <span> <strong>Parameters: </strong> </span>
 	                <br>	               
-	                <div ng-repeat="p in a.params track by p.name" style="margin-top: 2px;">
-	                	<!-- <div class="dropdown" ng-if="p.platforms" id="platforms-list-{{p.name}}">	                	
-		                    <button class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="platform-menu-{{p.name}}">
-		                    </button>
-		                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{p.name}}">
-		                      <a ng-click="updateDescription(a, p, platform)" ng-repeat="platform in p.platforms" class="dropdown-item" href="#">{{platform}}</a>
-		                    </div>
-	                    </div> -->
+	                <div ng-repeat="p in a.params track by p.name" style="margin-top: 2px;">	                	
 	                    <label ng-if="p.platforms">Platform: </label>
 	                    <select ng-if="p.platforms" ng-init="updateDescription(a, p)" ng-change="updateDescription(a, p)" ng-model="p.platform">
-						   <option ng-repeat="platform in p.platforms track by $index" ng-selected="$first" ng-value="platform"> {{platform}}</option>								   	
+						   <option ng-repeat="platform in p.platforms track by $index" ng-selected="$first" ng-value="platform"> {{platform}}</option>
 						</select>
-						<br>
+						<br ng-if="p.platforms">
 		                <span id="param-description-{{p.name}}">{{p.description}}</span>
 		                <br>
 	                  	<span ng-show="p.error" style="color: red; color:red; font-size: 10px; font-family: 'monospace';">{{p.error}}</span>
