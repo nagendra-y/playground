@@ -234,7 +234,6 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"description": "Group Permissions per message type",
 					"type": "number",
 					"required": false,
-					"value": 0
 				},
 				{
 					"name": "name",
@@ -295,8 +294,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"name": "type",
 					"description": "Group Permissions per message type",
 					"type": "number",
-					"required": false,
-					"value": 0
+					"required": false,					
 				},
 				{
 					"name": "m",
@@ -310,35 +308,35 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"description": "1 if members being added can send messages to the group, 0 for not",
 					"type": "number",
 					"required": false,
-					"value": 1
+					"valueList":[ 1, 0]
 				},
 				{
 					"name": "cr",
 					"description": "1 if members being added can receive group messages, 0 for not",
 					"type": "number",
 					"required": false,
-					"value": 1
+					"valueList":[ 1, 0]
 				},
 				{
 					"name": "canpub",
 					"description": "[group calling] 1 if members being added can make (publish) group voice or video calls, 0 for not",
 					"type": "number",
 					"required": false,
-					"value": 1
+					"valueList":[ 0, 1]
 				},
 				{
 					"name": "cansub",
 					"description": "[group calling] 1 if members being added can subscribe to group voice or video calls, 0 for not",
 					"type": "number",
 					"required": false,
-					"value": 1
+					"valueList":[ 0, 1]
 				},
 				{
 					"name": "canlist",
 					"description": "[group calling] 1 if members being added can get a list of active callers in the group, 0 for not",
 					"type": "number",
 					"required": false,
-					"value": 1
+					"valueList":[ 0, 1]
 				},
 				{
 					"name": "delete",
