@@ -410,7 +410,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 		}
 
 		$timeout(function()  {
-               document.getElementById("api-card-0").scrollIntoView();
+               // document.getElementById("api-card-0").scrollIntoView();
         });
 	}
 
