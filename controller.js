@@ -103,8 +103,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"name": "uid",
 					"description": "User ID obtained in add user operation",
 					"type": "number",
-					"required": true,
-					"value": ""
+					"required": true,					
 				},
 				{
 					"name": "flag",
@@ -136,8 +135,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"name": "uid",
 					"description": "User ID obtained in add user operation",
 					"type": "number",
-					"required": true,
-					"value": 0
+					"required": true,					
 				}
 			]
 		},
