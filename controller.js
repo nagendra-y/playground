@@ -70,6 +70,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					},
 					"platforms": ["Android", "iOS", "Other"],
 					"platform": "Android",
+					"placeholder": "Example, com.mesibo.androidapp",
 					"type": "string",
 					"required": true,
 					"value": ""
