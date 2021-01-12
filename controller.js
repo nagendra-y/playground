@@ -187,7 +187,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 				},
 				{
 					"name": "flag",
-					"description": "Group Flags",
+					"description": "Group Flags <br> <ul> <li>0 - normal group, only members can send</li><li>1 - only selected members can send (refer add members API)</li><li>0x20 - received by one member in the round-robin fashion</li><li>0x40 - do no store group messages</li><li>0x80 - loop back to sender</li></ul>",
 					"type": "string",
 					"required": true,
 					"value": ""
@@ -234,7 +234,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 				},
 				{
 					"name": "type",
-					"description": "Refer to Group Permissions per message type section",
+					"description": "Group Permissions per message type",
 					"type": "number",
 					"required": false,
 					"value": 0
@@ -409,8 +409,21 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 		}
 	}
 
-	$scope.updateDescription = function(param, platform){
-		if(!(param && platform))
+	$scope.setApiDescription = function(api){
+		if(!api)
+			return;
+
+		
+		$timeout(function()  {
+               // console.log("setApiDescription", document.getElementById("api-description-" + api.op));
+               if(document.getElementById("api-description-" + api.op))
+					document.getElementById("api-description-" + api.op).innerHTML = api.description;
+        });
+		
+	}
+
+	$scope.updateDescription = function(api, param, platform){
+		if(!(api && param && platform))
 			return RESULT_FAIL;		
 
 		if(!param.name)
@@ -438,9 +451,9 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 		param_description.innerHTML = newDescription;
 		// console.log("updateDescription", newDescription, param_description);
 		
-		if(document.getElementById("input-param-"+ param.name)){
+		if(document.getElementById("input-param-"+ api.op + "-" + param.name)){
 			if(alt[platform].placeholder)
-				document.getElementById("input-param-"+ param.name).placeholder = alt[platform].placeholder;
+				document.getElementById("input-param-"+ api.op + "-" + param.name).placeholder = alt[platform].placeholder;
 		}
 			
 	}

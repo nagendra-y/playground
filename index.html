@@ -36,9 +36,9 @@
               </button>
             </h5>
           </div>
-          <div id="collapse-{{$index}}" class="collapse" ng-class="{'show': false && $index == 0}" aria-labelledby="headingOne" data-parent="#accordion">
+          <div id="collapse-{{$index}}" class="collapse" data-parent="#accordion">
             <div class="card-body">
-              <span>{{apis[$index].description}}<span>
+              <span id="api-description-{{a.op}}" ng-init="setApiDescription(apis[$index])"></span>       
               <br>
               <br>
               <div class="row">	              
@@ -51,7 +51,7 @@
 		                    Select a Platform 
 		                    </button>
 		                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{p.name}}">
-		                      <a ng-click="updateDescription(p, platform)" ng-repeat="platform in p.platforms" class="dropdown-item" href="#">{{platform}}</a>
+		                      <a ng-click="updateDescription(a, p, platform)" ng-repeat="platform in p.platforms" class="dropdown-item" href="#">{{platform}}</a>
 		                    </div>
 	                    </div>
 		                <span id="param-description-{{p.name}}">{{p.description}}</span>
@@ -60,8 +60,8 @@
 		                	<div class="input-group-prepend">
 		                      <span class="input-group-text" >{{p.name}}<sup ng-if="p.required" style="color:red; font-size: 10px; font-family: 'monospace';" > &nbsp; *required</sup></span>
 		                    </div>
-		                    <input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-change="" ng-if="p.type == 'string'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-model="p.value" ng-required="p.required">
-		                    <input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-change=""  ng-if="p.type == 'number'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-model="p.value" ng-required="p.required">
+		                    <input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-change="" ng-if="p.type == 'string'" custom-autofocus="a.params[0] == p" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
+		                    <input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-change=""  ng-if="p.type == 'number'" custom-autofocus="a.params[0] == p" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
 		                </div>
 	                </div>
 	              </div>
@@ -72,7 +72,7 @@
 	                <div class="row h-50 no-gutters">
 		                <div class="form-group col-12">
 		                    <div class="input-group">
-		                      <textarea  rows="6" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000; width: 100%; background-color: #162d2c; color: white;" id="request-{{apis[$index].op}}" ng-model="apis[$index].requestUrl">
+		                      <textarea  rows="6" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey; width: 100%; background-color: #00868b; color: white;" id="request-{{apis[$index].op}}" ng-model="apis[$index].requestUrl">
 		                      </textarea>
 			                </div>
 			                <span><button ng-click="copyText('request-'+ apis[$index].op)" class="btn btn-primary my-1"><i class="fa fa-copy"></i> Copy Request</button></span>
@@ -87,7 +87,7 @@
 	                <div class="row h-50 no-gutters">
 		                <div class="form-group col-12">
 		                  <div class="input-group">
-		                    <textarea rows="6" type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000;width: 100%; background-color: #162d2c; color: white;" id="response-{{apis[$index].op}}">
+		                    <textarea rows="6" type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey;width: 100%; background-color: #00868b; color: white;" id="response-{{apis[$index].op}}">
 		                    </textarea>		                    
 		                  </div>
 		                  <span><button ng-click="copyText('response-'+ apis[$index].op)" class="btn btn-primary my-1"><i class="fa fa-copy"></i> Copy Response</button></span>
