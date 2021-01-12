@@ -396,6 +396,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 		if(!(apiListJson && apiListJson.length))
 			return;
 
+		$scope.apis = [];
 		for (var i = 0; i < apiListJson.length; i++) {
 			var a = apiListJson[i];
 			//TODO: Perform validation
