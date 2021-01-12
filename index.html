@@ -46,7 +46,7 @@
         <img id="img-apptoken" src="https://mesibo.com/documentation/tutorials/get-started/images/app-token.jpg" width="900">
       <div class="form-group">
         <label for="usr"><strong>Enter the App Token:</strong></label>
-        <input style="width:900px;" type="text" class="form-control" id="apptoken">
+        <input style="width:900px;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="text" class="form-control" id="apptoken">
       </div>
       <button type="button" id="save-token-button" class="btn btn-success" ng-click="setToken()"><i class="fa fa-rocket" aria-hidden="true"></i> Get Started</button>
       <div id="accordion" ng-repeat="a in apis track by $index" style="margin-top: 5px;">
