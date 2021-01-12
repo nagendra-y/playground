@@ -710,6 +710,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 	}
 
 	// $scope.initApis($scope.apiJson);
+	document.getElementById("apptoken").focus();
 
 }]);
 
