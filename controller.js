@@ -22,6 +22,9 @@ playground.directive('customAutofocus', function($timeout) {
 const RESULT_OK = 0;
 const RESULT_FAIL = -1;
 
+const RESULT_FAIL_APPID_NAN = 11;
+const RESULT_FAIL_APPID_DOTS = 12;
+
 playground.controller('AppController', ['$scope', '$window', '$compile', '$timeout', '$anchorScroll', function ($scope, $window, $compile, $timeout, $anchorScroll) {
 	$scope.root = "https://api.mesibo.com/api.php";
 	$scope.token = "";
@@ -87,8 +90,6 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"valueList": [1, 0]
 				},
 			],
-
-			"response" : {"OK": "Returns a user object on success"}
 		},
 
 		{	
@@ -452,6 +453,10 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 			if(alt[platform].placeholder)
 				document.getElementById("input-param-"+ api.op + "-" + param.name).placeholder = alt[platform].placeholder;
 		}
+
+		if(param.value){
+			$scope.checkValidParam(api, param);
+		}
 			
 	}
 	
@@ -468,34 +473,19 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 	}
 
 
-	$scope.validateParam = function(api, param){
+	$scope.validateParam = function(param, value){
 		// console.log("validateParam", api, param);
-		if(!(api && param)){
-			return RESULT_FAIL;
+		if(!(param && param.name)){
+			return;
 		}
 
-		if(!param.name){
+
+		if("" === value || undefined === value){											
 			return RESULT_FAIL;
-		}
-
-		var input = document.getElementById("input-param-"+ api.op + "-" + param.name);
-		if(!input)
-			return RESULT_FAIL;
-
-		var value = input.value;
-
-		if(param.required){
-			if(value === ""){
-				input.focus();
-				toastr.error("Please provide a valid input for the parameter "+ param.name);							
-				return RESULT_FAIL;
-			}			
-		}
+		}			
+		
 
 		if(param.name === "appid"){
-			//Special validation for appid
-			if(!value)
-				return RESULT_FAIL;
 
 			var platform = $scope.selected_platform[param.name];
 			var contains_dot = false;
@@ -503,9 +493,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 			if(typeof value === "string"){
 				for (var i = 0; i < value.length; i++) {
 					if(!isNaN(value[i])){
-						input.focus();
-						toastr.error("Please provide a non-numeric string value for "+ param.name);
-						return RESULT_FAIL;
+						return RESULT_FAIL_APPID_NAN;
 					}
 
 					if(value[i] == ".")
@@ -515,20 +503,62 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 
 			if(platform && !contains_dot){		
 				if(platform == "Android"){
-					input.focus();
-					toastr.error("Please provide a valid Package Name. Example, com.mesibo.androidapp");
-					return RESULT_FAIL;
+					return RESULT_FAIL_APPID_DOTS;
 				}
 
 				if(platform == "iOS"){
-					input.focus();
-					toastr.error("Please provide a valid Bundle ID. Example, com.mesibo.iosapp");
-					return RESULT_FAIL;
+					return RESULT_FAIL_APPID_DOTS;
 				}
 			}
 		}
 
 		return RESULT_OK;
+	}
+
+	$scope.checkValidParam = function(api, param){
+		
+		if(!(api && param)){
+			return;
+		}
+
+		if(!param.name){
+			return;
+		}
+
+		var value = param.value;
+
+		// console.log("checkValidParam", param, value);
+		var result = $scope.validateParam(param, value);
+
+		if(RESULT_FAIL == result)
+			toastr.error("Please provide a valid input for "+ param.name);
+
+		if(RESULT_FAIL_APPID_NAN == result)
+			toastr.error("Please provide a non-numeric string value for "+ param.name);
+		
+		if(RESULT_FAIL_APPID_DOTS == result)
+			toastr.error("Please provide a valid Package Name/Bundle ID. Example, com.mesibo.firstapp");		
+	}
+
+	// "
+
+	$scope.isRequiredParamsValid = function(api){
+		if(!(api.params && api.params.length))
+			return false;
+
+		for (var i = 0; i < api.params.length; i++) {
+			var p = api.params[i];				
+
+			if(p.required){
+				var val = $scope.validateParam(p, p.value);
+				// console.log(p, val);
+				if(RESULT_FAIL == val){					
+					return false;
+				}
+			}				
+		}
+		
+		return true;
 	}
 
 	$scope.runRequest = function(api){		
@@ -553,13 +583,10 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 		fetch(request_url)
 		  .then(response => response.json())
 		  .then(data => {
-			  	console.log(data);
-			  	var eleResponse = document.getElementById("response-"+ api.op);
-				if(!eleResponse)
-					return;
-				
+			  	console.log(data);			  	
 				try{
-					eleResponse.value = JSON.stringify(data);
+					api.response = JSON.stringify(data);
+					$scope.$applyAsync();
 				}
 				catch (e){
 					console.log(e);

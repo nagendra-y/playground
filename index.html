@@ -72,8 +72,8 @@
 		                	<div class="input-group-prepend">
 		                      <span class="input-group-text" >{{p.name}}<sup ng-if="p.required" style="color:red; font-size: 10px; font-family: 'monospace';" > &nbsp; *required</sup></span>
 		                    </div>
-		                    <input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-blur="validateParam(a, p)" ng-change="a.requestUrl = getRequestUrl(a)" ng-if="p.type == 'string'" custom-autofocus="a.params[0] == p" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
-		                    <input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-blur="validateParam(a, p)" ng-change="a.requestUrl = getRequestUrl(a)"  ng-if="p.type == 'number' && !p.valueList" custom-autofocus="a.params[0] == p" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
+		                    <input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-blur="checkValidParam(a, p)" ng-change="a.requestUrl = getRequestUrl(a)" ng-if="p.type == 'string'" custom-autofocus="a.params[0] == p" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
+		                    <input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-blur="checkValidParam(a, p)" ng-change="a.requestUrl = getRequestUrl(a)"  ng-if="p.type == 'number' && !p.valueList" custom-autofocus="a.params[0] == p" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
 
 		                    <select id="input-param-{{a.op}}-{{p.name}}" ng-change="a.requestUrl = getRequestUrl(a)" ng-model="p.value" ng-if="p.valueList">
 							   <option ng-repeat="v in p.valueList" ng-selected="$first" ng-value="v"> {{v}}</option>								   	
@@ -91,8 +91,8 @@
 		                      <textarea  rows="6" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey; width: 100%; background-color: #00868b; color: white;" id="request-{{apis[$index].op}}" ng-model="apis[$index].requestUrl">
 		                      </textarea>
 			                </div>
-			                <span><button ng-click="copyText('request-'+ apis[$index].op)" class="btn btn-secondary my-1"><i class="fa fa-copy"></i> Copy Request</button></span>
-		                    <span class="mx-1"><button ng-click="runRequest(apis[$index])" class="btn btn-secondary my-1"><i class="fa fa-play"></i> Execute</button>
+			                <span><button ng-disabled="!isRequiredParamsValid(apis[$index])" ng-click="copyText('request-'+ apis[$index].op)" class="btn btn-secondary my-1"><i class="fa fa-copy"></i> Copy Request</button></span>
+		                    <span class="mx-1"><button ng-disabled="!isRequiredParamsValid(apis[$index])" ng-click="runRequest(apis[$index])" class="btn btn-secondary my-1"><i class="fa fa-play"></i> Execute</button>
 		                    </span>
 		                </div>
 	                </div>
@@ -103,10 +103,10 @@
 	                <div class="row h-50 no-gutters">
 		                <div class="form-group col-12">
 		                  <div class="input-group">
-		                    <textarea rows="6" type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey;width: 100%; background-color: #00868b; color: white;" id="response-{{apis[$index].op}}">
+		                    <textarea rows="6" type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey;width: 100%; background-color: #00868b; color: white;" id="response-{{apis[$index].op}}" ng-model="apis[$index].response">
 		                    </textarea>		                    
 		                  </div>
-		                  <span><button ng-click="copyText('response-'+ apis[$index].op)" class="btn btn-secondary my-1"><i class="fa fa-copy"></i> Copy Response</button></span>
+		                  <span><button ng-disabled="!apis[$index].response" ng-click="copyText('response-'+ apis[$index].op)" class="btn btn-secondary my-1"><i class="fa fa-copy"></i> Copy Response</button></span>
 		                </div>
 	                </div>
 
