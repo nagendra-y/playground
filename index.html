@@ -26,11 +26,16 @@
 		border: none;
 		outline:none;
 	  }
+
+	  textarea {
+		    padding: 10px;
+		    background: rgba(73,204,144,.1);
+		}
     </style>
   </head>
   <body ng-cloak="apis" ng-app="MesiboPlayground" id="mesiboapiplay" ng-controller="AppController">
     <nav class="navbar navbar-light" style="background-color: #00868b;">
-      <a href="https://mesibo.com/"><img class="logo" src="https://mesibo.com/images/mesibo-logo-white.png" alt="Mesibo" title="Mesibo" style="width: 16opx; height: 50px;"></a>
+      <a href="https://mesibo.com/"><img class="logo" src="https://mesibo.com/images/mesibo-logo-white.png" alt="Mesibo" title="Mesibo" style="width: 160px; height: 50px;"></a>
       <span class="navbar-brand mb-0 h1" style="color:white"> API Playground</span>
     </nav>
     <br>
@@ -42,7 +47,7 @@
         <label for="usr"><strong>Enter the App Token:</strong></label>
         <input style="width:900px;" type="text" class="form-control" id="apptoken">
       </div>
-      <button type="button" class="btn btn-success" ng-click="setToken()">Save</button>
+      <button type="button" class="btn btn-success" ng-click="setToken()">Get Started</button>
       <div id="accordion" ng-repeat="a in apis track by $index" style="margin-top: 5px;">
         <div class="card" id="api-card-{{$index}}" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000;border-color: #49cc90;background: rgba(73,204,144,.1);">
           <div class="card-header" id="heading-$index">
@@ -64,7 +69,7 @@
 	                <div ng-repeat="p in a.params track by p.name" style="margin-top: 2px;">
 	                	<div class="dropdown" ng-if="p.platforms" id="platforms-list-{{p.name}}">
 		                    <button class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="platform-menu-{{p.name}}">
-		                    Select a Platform 
+		                     Platform: <>
 		                    </button>
 		                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{p.name}}">
 		                      <a ng-click="updateDescription(a, p, platform)" ng-repeat="platform in p.platforms" class="dropdown-item" href="#">{{platform}}</a>
@@ -92,11 +97,11 @@
 	                <div class="row h-50 no-gutters">
 		                <div class="form-group col-12">
 		                    <div class="input-group">
-		                      <textarea  rows="6" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey; width: 100%; background-color: #00868b; color: white;" id="request-{{apis[$index].op}}" ng-model="apis[$index].requestUrl">
+		                      <textarea  rows="6" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey; width: 100%;" id="request-{{apis[$index].op}}" ng-model="apis[$index].requestUrl">
 		                      </textarea>
 			                </div>
-			                <span><button ng-disabled="!isRequiredParamsValid(apis[$index])" ng-click="copyText('request-'+ apis[$index].op)" class="btn btn-dark my-1"><i class="fa fa-copy"></i> Copy Request</button></span>
-		                    <span class="mx-1"><button ng-disabled="!isRequiredParamsValid(apis[$index])" ng-click="runRequest(apis[$index])" class="btn btn-dark my-1"><i class="fa fa-play"></i> Execute</button>
+			                <span><button ng-disabled="!isRequiredParamsValid(apis[$index])" ng-click="copyText('request-'+ apis[$index].op)" style="background-color: #00868b" class="btn my-1"><i class="fa fa-copy"></i> Copy Request</button></span>
+		                    <span class="mx-1"><button ng-disabled="!isRequiredParamsValid(apis[$index])" ng-click="runRequest(apis[$index])" style="background-color: #00868b" class="btn my-1"><i class="fa fa-play"></i> Execute</button>
 		                    </span>
 		                </div>
 	                </div>
@@ -107,10 +112,10 @@
 	                <div class="row h-50 no-gutters">
 		                <div class="form-group col-12">
 		                  <div class="input-group">
-		                    <textarea rows="6" type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey;width: 100%; background-color: #00868b; color: white;" id="response-{{apis[$index].op}}" ng-model="apis[$index].response">
+		                    <textarea rows="6" type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey;width: 100%; border: 1px solid black" id="response-{{apis[$index].op}}" ng-model="apis[$index].response">
 		                    </textarea>		                    
 		                  </div>
-		                  <span><button ng-disabled="!apis[$index].response" ng-click="copyText('response-'+ apis[$index].op)" class="btn btn-dark my-1"><i class="fa fa-copy"></i> Copy Response</button></span>
+		                  <span><button ng-disabled="!apis[$index].response" ng-click="copyText('response-'+ apis[$index].op)" class="btn my-1"><i class="fa fa-copy"></i> Copy Response</button></span>
 		                </div>
 	                </div>
 
