@@ -113,7 +113,7 @@
 		                    <textarea autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" rows="6" type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey;width: 100%; border: 1px solid black" id="response-{{apis[$index].op}}" ng-model="apis[$index].response">
 		                    </textarea>		                    
 		                  </div>
-		                  <span><button ng-disabled="!apis[$index].response" ng-click="copyText('response-'+ apis[$index].op)" class="btn my-1"><i class="fa fa-copy"></i> Copy Response</button></span>
+		                  <span><button ng-disabled="!apis[$index].response" ng-click="copyText('response-'+ apis[$index].op)" style="background-color: #00868b; color: white"  class="btn my-1"><i class="fa fa-copy"></i> Copy Response</button></span>
 		                </div>
 	                </div>
 
