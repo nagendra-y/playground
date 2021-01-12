@@ -544,8 +544,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 						$scope.initApis($scope.apiJson);
 					}
 					else{
-						document.getElementById("save-token-button").classList.replace("btn-success", "btn-danger");
-						document.getElementById("save-token-button").innerText = "Bad Token";
+						alert("Enter a valid token");
 					}
 
 
