@@ -175,7 +175,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 			"op" : "groupadd",
 			"type": "group",
 			"title" : "Create a Group",
-			"description": "reate a group to enable real-time group communication between your users. Mesibo will create a group ID (GID) which you can use to add and remove members. Your users can use GID in various real-time API to send messages to the group.",
+			"description": "reate a group to enable real-time group communication between your users. Mesibo will create a group ID (GID) which you can use to add and remove members. Your users can use GID in various real-time API to send messages to the group. <br><br> Group Flags: <br> <ul> <li>0 - normal group, only members can send</li><li>1 - only selected members can send (refer add members API)</li><li>0x20 - received by one member in the round-robin fashion</li><li>0x40 - do no store group messages</li><li>0x80 - loop back to sender</li></ul>",	
 			"requestUrl": "",
 			"params": [ 
 				{
@@ -187,7 +187,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 				},
 				{
 					"name": "flag",
-					"description": "Group Flags <br> <ul> <li>0 - normal group, only members can send</li><li>1 - only selected members can send (refer add members API)</li><li>0x20 - received by one member in the round-robin fashion</li><li>0x40 - do no store group messages</li><li>0x80 - loop back to sender</li></ul>",
+					"description": "Group Flags",
 					"type": "string",
 					"required": true,
 					"value": ""
