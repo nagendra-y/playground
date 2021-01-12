@@ -49,7 +49,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 				},
 				{
 					"name": "appid",
-					"description": "Custom Application ID",
+					"description": "Android Package Name. The generated token will be applicable for the app having this package name only",
 					"alt":
 					{
 						"Android": 
@@ -69,6 +69,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 						},
 					},
 					"platforms": ["Android", "iOS", "Other"],
+					"platform": "Android",
 					"type": "string",
 					"required": true,
 					"value": ""
@@ -476,22 +477,20 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 		
 	}
 
-	$scope.updateDescription = function(api, param, platform){
-		if(!(api && param && platform))
+	$scope.updateDescription = function(api, param){
+		if(!(api && param))
 			return RESULT_FAIL;		
+
+		var platform = param.platform;
+		if(!platform)
+			return;
 
 		if(!param.name)
 			return RESULT_FAIL;
 
-		$scope.selected_platform[param.name] = platform;
-
-		var e = document.getElementById("platform-menu-"+ param.name);
-		if(!e)
-			return RESULT_FAIL;
-		e.textContent = platform;
 
 		var alt = param.alt;
-		if(!alt)
+		if(!(alt && alt[platform]))
 			return RESULT_FAIL;
 
 		var newDescription = alt[platform].description;
@@ -522,9 +521,33 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 			return;
 
 		$scope.token = t.value;
-		toastr.success("Token saved. Click on the API description to try it!");
-		document.getElementById("img-apptoken").style.display = "none";
-		$scope.initApis($scope.apiJson);
+
+		var request_url = $scope.root + "?token="+ $scope.token + "&d=1&op=appstats"
+		fetch(request_url)
+		  .then(response => response.json())
+		  .then(data => {
+			  	console.log(data);			  	
+				try{
+					if(data.result){
+						toastr.success("Token saved. Click on the API description to try it!");
+						document.getElementById("img-apptoken").style.display = "none";
+						document.getElementById("save-token-button").classList.replace("btn-danger", "btn-success");
+						document.getElementById("save-token-button").innerText = "Get Started";
+						$scope.initApis($scope.apiJson);
+					}
+					else{
+						document.getElementById("save-token-button").classList.replace("btn-success", "btn-danger");
+						document.getElementById("save-token-button").innerText = "Bad Token";
+					}
+
+
+				}
+				catch (e){
+					console.log(e);
+				}				
+		  	});
+
+		
 
 	}
 
