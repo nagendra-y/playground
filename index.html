@@ -12,16 +12,18 @@
       sup { vertical-align: top; position: relative; top: -0.5em; }
 
       input::-webkit-inner-spin-button {
-		  -webkit-appearance: none;
-		  margin: 0;
-		}
+		-webkit-appearance: none;
+		margin: 0;
+	  }
 
-		/* Firefox */
-		input[type=number] {
-		  -moz-appearance: textfield;
-		}
+	  /* Firefox */
+	  input[type=number] {
+		-moz-appearance: textfield;
+	  }
 
-
+	  .btn.btn-dark:disabled{
+		background-color: #A9A9A9;
+	  }
     </style>
   </head>
   <body ng-cloak="apis" ng-app="MesiboPlayground" id="mesiboapiplay" ng-controller="AppController">
@@ -59,7 +61,7 @@
 	                <br>	               
 	                <div ng-repeat="p in a.params track by p.name" style="margin-top: 2px;">
 	                	<div class="dropdown" ng-if="p.platforms" id="platforms-list-{{p.name}}">
-		                    <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="platform-menu-{{p.name}}">
+		                    <button class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="platform-menu-{{p.name}}">
 		                    Select a Platform 
 		                    </button>
 		                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-{{p.name}}">
@@ -91,8 +93,8 @@
 		                      <textarea  rows="6" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey; width: 100%; background-color: #00868b; color: white;" id="request-{{apis[$index].op}}" ng-model="apis[$index].requestUrl">
 		                      </textarea>
 			                </div>
-			                <span><button ng-disabled="!isRequiredParamsValid(apis[$index])" ng-click="copyText('request-'+ apis[$index].op)" class="btn btn-secondary my-1"><i class="fa fa-copy"></i> Copy Request</button></span>
-		                    <span class="mx-1"><button ng-disabled="!isRequiredParamsValid(apis[$index])" ng-click="runRequest(apis[$index])" class="btn btn-secondary my-1"><i class="fa fa-play"></i> Execute</button>
+			                <span><button ng-disabled="!isRequiredParamsValid(apis[$index])" ng-click="copyText('request-'+ apis[$index].op)" class="btn btn-dark my-1"><i class="fa fa-copy"></i> Copy Request</button></span>
+		                    <span class="mx-1"><button ng-disabled="!isRequiredParamsValid(apis[$index])" ng-click="runRequest(apis[$index])" class="btn btn-dark my-1"><i class="fa fa-play"></i> Execute</button>
 		                    </span>
 		                </div>
 	                </div>
@@ -106,7 +108,7 @@
 		                    <textarea rows="6" type="url" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid grey;width: 100%; background-color: #00868b; color: white;" id="response-{{apis[$index].op}}" ng-model="apis[$index].response">
 		                    </textarea>		                    
 		                  </div>
-		                  <span><button ng-disabled="!apis[$index].response" ng-click="copyText('response-'+ apis[$index].op)" class="btn btn-secondary my-1"><i class="fa fa-copy"></i> Copy Response</button></span>
+		                  <span><button ng-disabled="!apis[$index].response" ng-click="copyText('response-'+ apis[$index].op)" class="btn btn-dark my-1"><i class="fa fa-copy"></i> Copy Response</button></span>
 		                </div>
 	                </div>
 
