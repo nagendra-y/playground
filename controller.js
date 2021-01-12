@@ -22,24 +22,27 @@ playground.directive('customAutofocus', function($timeout) {
 const RESULT_OK = 0;
 const RESULT_FAIL = -1;
 
-playground.controller('AppController', ['$scope', '$window', '$anchorScroll', function ($scope, $window, $anchorScroll) {
+playground.controller('AppController', ['$scope', '$window', '$compile', '$timeout', '$anchorScroll', function ($scope, $window, $compile, $timeout, $anchorScroll) {
 	$scope.root = "https://api.mesibo.com/api.php";
 	$scope.token = "";
 	$scope.selected_platform = {};
 
-	$scope.apis = [
+	$scope.apis = [];
+
+	$scope.apiJson = [
 		{	
 			"op" : "useradd",
+			"type": "user",
 			"title" : "Add a User or Regenerate a User Access Token",
 			"description": "To enable real-time communication between your users, you need to let mesibo know about each of your users. Mesibo will create an access token for each user and give it to you which you can send it to your users. Your user can then use this access token in Mesibo Real-time APIs using setAccessToken function.",
-
+			"requestUrl": "",
 			"params": [ 
 				{
 					"name": "addr",
 					"description": "User Address (e.g phone number, email address, etc.)",
-					"type": "String",
+					"type": "string",
 					"required": true,
-					"default": ""
+					"value": ""
 				},
 				{
 					"name": "appid",
@@ -63,41 +66,290 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 						},
 					},
 					"platforms": ["Android", "iOS", "Other"],
-					"type": "String",
+					"type": "string",
 					"required": true,
-					"default": ""
+					"value": ""
 				},
 				{
 					"name": "expiry",
 					"description": "In minutes, default 1 year",
-					"type": "Number",
+					"type": "number",
 					"required": false,
-					"default": 525600 
+					"value": 525600 
 				},
 
 				{
 					"name": "active",
 					"description": "Enable user, default 1 (active)",
-					"type": "Number",
+					"type": "number",
 					"required": false,
-					"default": 1
+					"value": 1
 				},
 
 				{
 					"name": "groups",
 					"description": "Maximum Groups",
-					"type": "Number",
+					"type": "number",
 					"required": false,
 				}
 			],
 
 			"response" : {"OK": "Returns a user object on success"}
-		}	
+		},
+
+		{	
+			"op" : "userset",
+			"type": "user",
+			"title" : "Edit a User",
+			"description": "Edit an existing user using the `UID` obtained from `useradd` operation.",
+			"requestUrl": "",
+			"params": [ 
+				{
+					"name": "uid",
+					"description": "User ID obtained in add user operation",
+					"type": "number",
+					"required": true,
+					"value": ""
+				},
+				{
+					"name": "flag",
+					"description": "Flags",
+					"type": "number",
+					"required": true,
+					"value": 0 
+				},
+
+				{
+					"name": "active",
+					"description": "Enable user, default 1 (active)",
+					"type": "number",
+					"required": false,
+					"value": 1
+				},
+			]
+		},
+
+		{	
+			"op" : "userdel",
+			"type": "user",
+			"title" : "Delete a User",
+			"description": "Delete an existing user using UID obtained from add user operation",
+			"requestUrl": "",
+			"params": [ 
+				{
+					"name": "uid",
+					"description": "User ID obtained in add user operation",
+					"type": "number",
+					"required": true,
+					"value": 0
+				}
+			]
+		},
+
+		{	
+			"op" : "usersget",
+			"type": "user",
+			"title" : "Get Users",
+			"description": "Get users for an application. This API is only for development purpose only and hence maximum 20 users will be returned. You should store your users locally instead of obtaining from the mesibo.",
+			"requestUrl": "",
+			"params": [ 
+				{
+					"name": "addr",
+					"description": "get users marching address. Wildcard (*) allowed",
+					"type": "string",
+					"required": true,
+					"value": ""
+				},
+				{
+					"name": "count",
+					"description": "Max number of users to get. Max 20",
+					"type": "number",
+					"required": true,
+					"value": 20
+				},
+			]
+		},
+
+
+		{	
+			"op" : "groupadd",
+			"type": "group",
+			"title" : "Create a Group",
+			"description": "reate a group to enable real-time group communication between your users. Mesibo will create a group ID (GID) which you can use to add and remove members. Your users can use GID in various real-time API to send messages to the group.",
+			"requestUrl": "",
+			"params": [ 
+				{
+					"name": "name",
+					"description": "Group Name",
+					"type": "string",
+					"required": false,
+					"value": ""
+				},
+				{
+					"name": "flag",
+					"description": "Group Flags",
+					"type": "string",
+					"required": true,
+					"value": ""
+				},
+				{
+					"name": "expiry",
+					"description": "In minutes, default 1 year",
+					"type": "number",
+					"required": false,
+					"value": 525600 
+				},
+				{
+					"name": "expiryext",
+					"description": "Auto extend expiry on group activity, in seconds. Default disabled",
+					"type": "number",
+					"required": false,
+					"value": 0 
+				},
+
+				{
+					"name": "active",
+					"description": "1 to enable, 0 to disable",
+					"type": "number",
+					"required": false,
+					"value": 1
+				},
+
+			]
+		},
+
+		{	
+			"op" : "groupset",
+			"type": "group",
+			"title" : "Edit a Group",
+			"description": "Edit an existing group using GID obtained in the group add operation.",
+			"requestUrl": "",
+			"params": [ 
+				{
+					"name": "gid",
+					"description": "Group ID (GID)",
+					"type": "number",
+					"required": true,
+					"value": 0
+				},
+				{
+					"name": "type",
+					"description": "Refer to Group Permissions per message type section",
+					"type": "number",
+					"required": false,
+					"value": 0
+				},
+				{
+					"name": "m",
+					"description": "comma-separated list of user addresses to add or remove in the group",
+					"type": "string",
+					"required": true,
+					"value": ""
+				},
+				{
+					"name": "cs",
+					"description": "1 if members being added can send messages to the group, 0 for not",
+					"type": "number",
+					"required": false,
+					"value": 1
+				},
+				{
+					"name": "cr",
+					"description": "1 if members being added can receive group messages, 0 for not",
+					"type": "number",
+					"required": false,
+					"value": 1
+				},
+				{
+					"name": "canpub",
+					"description": "[group calling] 1 if members being added can make (publish) group voice or video calls, 0 for not",
+					"type": "number",
+					"required": false,
+					"value": 1
+				},
+				{
+					"name": "cansub",
+					"description": "[group calling] 1 if members being added can subscribe to group voice or video calls, 0 for not",
+					"type": "number",
+					"required": false,
+					"value": 1
+				},
+				{
+					"name": "canlist",
+					"description": "[group calling] 1 if members being added can get a list of active callers in the group, 0 for not",
+					"type": "number",
+					"required": false,
+					"value": 1
+				},
+				{
+					"name": "delete",
+					"description": "0 to add members, 1 to remove members",
+					"type": "number",
+					"required": true,
+					"value": 0
+				}		
+
+			]
+		},
+
+		{	
+			"op" : "groupdel",
+			"type": "group",
+			"title" : "Delete a Group",
+			"description": "Delete an existing group using GID obtained in the group add operation.",
+			"requestUrl": "",
+			"params": [ 
+				{
+					"name": "gid",
+					"description": "Group ID (GID)",
+					"type": "number",
+					"required": true,
+					"value": 0
+				}
+			]
+		},
+
+		{	
+			"op" : "groupgetmembers",
+			"type": "group",
+			"title" : "Get Group Members",
+			"description":"Get Group Members using GID obtained in the group add operation.This API is only for development purpose only and hence maximum 20 users will be returned. You should store your group members locally instead of obtaining from the mesibo.",
+			"requestUrl": "",
+			"params": [ 
+				{
+					"name": "gid",
+					"description": " Group ID (GID)",
+					"type": "number",
+					"required": true,
+					"value": 0
+				},
+				{
+					"name": "count",
+					"description": "Max number of users to get. Max 20",
+					"type": "number",
+					"required": true,
+					"value": 20
+				},
+			]
+		},
 
 	];
 
-	$scope.apis[1] = {"op":"useredit", "title": "Edit a User", "parameters": []}; 
-	$scope.apis[2] = {"op" : "userdel", "title": "Delete a User", "parameters": []};
+	$scope.initApis = function(apiListJson){
+		if(!(apiListJson && apiListJson.length))
+			return;
+
+		for (var i = 0; i < apiListJson.length; i++) {
+			var a = apiListJson[i];
+			//TODO: Perform validation
+			a.requestUrl = $scope.getRequestUrl(a);
+			$scope.apis.push(a);
+		}
+
+		$timeout(function()  {
+               document.getElementById("api-card-0").scrollIntoView();
+        });
+	}
 
 	$scope.getRequestUrl = function(api){
 		if(!api)
@@ -117,11 +369,7 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 
 		for(var i=0; i<params.length; i++){
 			var param = params[i].name;
-			var value = "";
-
-			var param_value = document.getElementById("input-param-"+ param);
-			if(param_value)
-				value = param_value.value;
+			var value = params[i].value;
 
 			if(!(value == undefined || value == null || value == NaN)){
 				var pv = param + "=" + value;
@@ -137,17 +385,28 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 		if(!(api && param))
 			return;
 
-		//Use regexp to replace param=value part in the url
 
 		var url = $scope.getRequestUrl(api);
 		if(!url)
 			return;
 
-		var eleUrl = document.getElementById("request-"+ api.op);
-		if(!eleUrl)
-			return;
+		// var eleUrl = document.getElementById("request-"+ api.op);
+		// if(!eleUrl)
+		// 	return;
 		
-		eleUrl.value = url;
+		// eleUrl.value = url;
+		$scope.requestUrl = url;
+		$scope.$applyAsync();
+	}
+
+	$scope.getApi = function(a){
+		if(!(a && a.op))
+			return;
+
+		for (var i = $scope.apis.length - 1; i >= 0; i--) {
+			if($scope.apis[i].op == a.op)
+				return $scope.apis[i];
+		}
 	}
 
 	$scope.updateDescription = function(param, platform){
@@ -192,7 +451,8 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 			return;
 
 		$scope.token = t.value;
-		window.scrollBy(0, 200);
+		toastr.success("Token saved. Click on the API description to try it!");
+		$scope.initApis($scope.apiJson);		
 	}
 
 	$scope.validateAppid = function(api, param){
@@ -320,5 +580,10 @@ playground.controller('AppController', ['$scope', '$window', '$anchorScroll', fu
 
 
 }]);
+
+//For debugging purposes only
+function getScope(){
+        return angular.element(document.getElementById('mesiboapiplay')).scope();
+};
 
 

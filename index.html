@@ -20,7 +20,7 @@
     <br>
     <div style="margin-left: 95px;">
       <p>This is an interactive playground for trying out <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/documentation/api/backend-api">Mesibo Backend APIs</a>.<br>
-        You need an <code>Application token</code> to try the APIs. You can get the token from <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/console">Mesibo Console</a>.<br>
+        You need to enter an <code>Application token</code> before you can try the APIs. Get the token from your <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/console">Console</a><br>
         <img src="https://mesibo.com/documentation/tutorials/get-started/images/app-token.jpg" width="900">
       <div class="form-group">
         <label for="usr"><strong>Enter the App Token:</strong></label>
@@ -28,7 +28,7 @@
       </div>
       <button type="button" class="btn btn-success" ng-click="setToken()">Save</button>
       <div id="accordion" ng-repeat="a in apis track by $index" style="margin-top: 5px;">
-        <div class="card" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000;border-color: #49cc90;background: rgba(73,204,144,.1);">
+        <div class="card" id="api-card-{{$index}}" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000;border-color: #49cc90;background: rgba(73,204,144,.1);">
           <div class="card-header" id="heading-$index">
             <h5 class="mb-0">
               <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-{{$index}}" aria-expanded="false" aria-controls="collapse-{{$index}}">
@@ -36,7 +36,7 @@
               </button>
             </h5>
           </div>
-          <div id="collapse-{{$index}}" class="collapse" ng-class="{'show': $index == 0}" aria-labelledby="headingOne" data-parent="#accordion">
+          <div id="collapse-{{$index}}" class="collapse" ng-class="{'show': false && $index == 0}" aria-labelledby="headingOne" data-parent="#accordion">
             <div class="card-body">
               <span>{{apis[$index].description}}<span>
               <br>
@@ -45,7 +45,7 @@
 	              <div class="col-6 my-1">
 	                <span> <strong>Parameters: </strong> </span>
 	                <br>	               
-	                <div ng-repeat="p in a.params" style="margin-top: 2px;">
+	                <div ng-repeat="p in a.params track by p.name" style="margin-top: 2px;">
 	                	<div class="dropdown" ng-if="p.platforms" id="platforms-list-{{p.name}}">
 		                    <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="platform-menu-{{p.name}}">
 		                    Select a Platform 
@@ -60,8 +60,8 @@
 		                	<div class="input-group-prepend">
 		                      <span class="input-group-text" >{{p.name}}<sup ng-if="p.required" style="color:red; font-size: 10px; font-family: 'monospace';" > &nbsp; *required</sup></span>
 		                    </div>
-		                    <input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-change="updateRequestUrl(a, p)" ng-if="p.type == 'String'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-value="p.default" ng-model="p.default" ng-required="p.required">
-		                    <input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-change="updateRequestUrl(a, p)"  ng-if="p.type == 'Number'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-value="p.default" ng-model="p.default" ng-required="p.required">
+		                    <input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-change="" ng-if="p.type == 'string'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-model="p.value" ng-required="p.required">
+		                    <input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-change=""  ng-if="p.type == 'number'" custom-autofocus="a.params[0] == p" id="input-param-{{p.name}}" ng-model="p.value" ng-required="p.required">
 		                </div>
 	                </div>
 	              </div>
@@ -72,7 +72,7 @@
 	                <div class="row h-50 no-gutters">
 		                <div class="form-group col-12">
 		                    <div class="input-group">
-		                      <textarea  rows="6" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000; width: 100%; background-color: #162d2c; color: white;" id="request-{{apis[$index].op}}" ng-value="getRequestUrl(apis[$index])">
+		                      <textarea  rows="6" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000; width: 100%; background-color: #162d2c; color: white;" id="request-{{apis[$index].op}}" ng-model="apis[$index].requestUrl">
 		                      </textarea>
 			                </div>
 			                <span><button ng-click="copyText('request-'+ apis[$index].op)" class="btn btn-primary my-1"><i class="fa fa-copy"></i> Copy Request</button></span>
