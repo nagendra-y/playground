@@ -467,11 +467,9 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 
 	}
 
-	$scope.validateAppid = function(api, param){
-
-	}
 
 	$scope.validateParam = function(api, param){
+		// console.log("validateParam", api, param);
 		if(!(api && param)){
 			return RESULT_FAIL;
 		}

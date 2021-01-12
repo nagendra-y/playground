@@ -72,8 +72,8 @@
 		                	<div class="input-group-prepend">
 		                      <span class="input-group-text" >{{p.name}}<sup ng-if="p.required" style="color:red; font-size: 10px; font-family: 'monospace';" > &nbsp; *required</sup></span>
 		                    </div>
-		                    <input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-change="a.requestUrl = getRequestUrl(a)" ng-if="p.type == 'string'" custom-autofocus="a.params[0] == p" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
-		                    <input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-change="a.requestUrl = getRequestUrl(a)"  ng-if="p.type == 'number' && !p.valueList" custom-autofocus="a.params[0] == p" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
+		                    <input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-blur="validateParam(a, p)" ng-change="a.requestUrl = getRequestUrl(a)" ng-if="p.type == 'string'" custom-autofocus="a.params[0] == p" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
+		                    <input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-blur="validateParam(a, p)" ng-change="a.requestUrl = getRequestUrl(a)"  ng-if="p.type == 'number' && !p.valueList" custom-autofocus="a.params[0] == p" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
 
 		                    <select id="input-param-{{a.op}}-{{p.name}}" ng-change="a.requestUrl = getRequestUrl(a)" ng-model="p.value" ng-if="p.valueList">
 							   <option ng-repeat="v in p.valueList" ng-selected="$first" ng-value="v"> {{v}}</option>								   	
