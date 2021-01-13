@@ -1,0 +1,370 @@
+{
+	"list": 
+	[
+		{
+			"op" : "useradd",
+			"type": "user",
+			"title" : "Add a User or Regenerate a User Access Token",
+			"description": "To enable real-time communication between your users, you need to let mesibo know about each of your users. Mesibo will create an access token for each user and give it to you which you can send it to your users. Your user can then use this access token in Mesibo Real-time APIs using setAccessToken function.",
+			"requestUrl": "",
+			"params": [
+				{
+					"name": "addr",
+					"description": "User Address (e.g phone number, email address, etc.)",
+					"type": "string",
+					"required": true,
+					"value": ""
+				},
+				{
+					"name": "appid",
+					"description": "Android package name declared in the AndroidManifest.xml. The generated token will be applicable for the app having this package name only",
+					"alt":
+					{
+						"Android":
+						{
+							"description": "Android package name declared in the AndroidManifest.xml. The generated token will be applicable for the app having this package name only",
+							"placeholder": "Example, com.mesibo.androidapp"
+						},
+						"iOS":
+						{
+							"description": "iOS Bundle id declared in the Xcode project. The generated token will be applicable for the app having this Bundle id only",
+							"placeholder": "Example, com.mesibo.iosapp"
+						},
+
+						"Other": {
+							"description":"For all other platforms, you can pass any non-numeric string (for example, com.yourdomain.yourapp), and the same need to be passed to setAppName function.",
+							"placeholder": "Example, web"
+						}
+					},
+					"platforms": ["Android", "iOS", "Other"],
+					"platform": "Android",
+					"placeholder": "Example, com.mesibo.androidapp",
+					"type": "string",
+					"required": true,
+					"value": ""
+				},
+				{
+					"name": "name",
+					"description": "User Name",
+					"type": "string",
+					"required": false,
+					"value": ""
+				},
+
+
+				{
+					"name": "expiry",
+					"description": "In minutes, default 1 year",
+					"type": "number",
+					"required": false,
+					"value": 525600
+				},
+				{
+					"name": "active",
+					"description": "Enable user, default 1 (active)",
+					"type": "number",
+					"required": false,
+					"value": 1,
+					"valueList": [1, 0]
+				}
+			]
+		},
+
+		{
+			"op" : "userset",
+			"type": "user",
+			"title" : "Edit a User",
+			"description": "Edit an existing user using the `UID` obtained from `useradd` operation.",
+			"requestUrl": "",
+			"params": [
+				{
+					"name": "uid",
+					"description": "User ID obtained in add user operation",
+					"type": "number",
+					"required": true
+				},
+				{
+					"name": "flag",
+					"description": "Flags",
+					"type": "number",
+					"required": true,
+					"value": 0
+				},
+
+				{
+					"name": "active",
+					"description": "Enable user, default 1 (active)",
+					"type": "number",
+					"required": false,
+					"value": 1,
+					"valueList": [1, 0]
+				}
+			]
+		},
+
+		{
+			"op" : "userdel",
+			"type": "user",
+			"title" : "Delete a User",
+			"description": "Delete an existing user using UID obtained from add user operation",
+			"requestUrl": "",
+			"params": [
+				{
+					"name": "uid",
+					"description": "User ID obtained in add user operation",
+					"type": "number",
+					"required": true
+				}
+			]
+		},
+
+		{
+			"op" : "usersget",
+			"type": "user",
+			"title" : "Get Users",
+			"description": "Get users for an application. This API is only for development purpose only and hence maximum 20 users will be returned. You should store your users locally instead of obtaining from the mesibo.",
+			"requestUrl": "",
+			"params": [
+				{
+					"name": "addr",
+					"description": "get users marching address. Wildcard (*) allowed",
+					"type": "string",
+					"required": true,
+					"value": ""
+				},
+				{
+					"name": "count",
+					"description": "Max number of users to get. Max 20",
+					"type": "number",
+					"required": true,
+					"value": 20
+				}
+			]
+		},
+
+
+		{
+			"op" : "groupadd",
+			"type": "group",
+			"title" : "Create a Group",
+			"description": "Create a group to enable real-time group communication between your users. Mesibo will create a group ID (GID) which you can use to add and remove members. Your users can use GID in various real-time API to send messages to the group. <br><br> Group Flags: <br> <ul> <li>0 - normal group, only members can send</li><li>1 - only selected members can send (refer add members API)</li><li>0x20 - received by one member in the round-robin fashion</li><li>0x40 - do no store group messages</li><li>0x80 - loop back to sender</li></ul>",
+			"requestUrl": "",
+			"params": [
+				{
+					"name": "flag",
+					"description": "Group Flags",
+					"type": "string",
+					"required": true,
+					"value": "0"
+				},
+				{
+					"name": "name",
+					"description": "Group Name",
+					"type": "string",
+					"required": false,
+					"value": ""
+				},
+
+				{
+					"name": "expiry",
+					"description": "In minutes, default 1 year",
+					"type": "number",
+					"required": false,
+					"value": 525600
+				},
+				{
+					"name": "expiryext",
+					"description": "Auto extend expiry on group activity, in seconds. Default disabled",
+					"type": "number",
+					"required": false,
+					"value": 0
+				},
+
+				{
+					"name": "active",
+					"description": "1 to enable, 0 to disable",
+					"type": "number",
+					"required": false,
+					"value": 1,
+					"valueList": [1, 0]
+				}
+
+			]
+		},
+
+		{
+			"op" : "groupset",
+			"type": "group",
+			"title" : "Edit a Group",
+			"description": "Edit an existing group using GID obtained in the <code>group add</code> operation. <br><br> Group Flags: <br> <ul> <li>0 - normal group, only members can send</li><li>1 - only selected members can send (refer add members API)</li><li>0x20 - received by one member in the round-robin fashion</li><li>0x40 - do no store group messages</li><li>0x80 - loop back to sender</li></ul> <br> To know about setting the group permissions per message type, see <a href='https://mesibo.com/documentation/api/backend-api/#group-permissions-per-message-type' target='_blank'>here</a>",
+			"requestUrl": "",
+			"params": [
+				{
+					"name": "gid",
+					"description": "Group ID (GID)",
+					"type": "number",
+					"required": true
+				},
+				{
+					"name": "flag",
+					"description": "Group Flags",
+					"type": "string",
+					"required": true,
+					"value": "0"
+				},
+				{
+					"name": "type",
+					"description": "Group Permissions per message type",
+					"type": "number",
+					"required": false
+				},
+				{
+					"name": "name",
+					"description": "Group Name",
+					"type": "string",
+					"required": false,
+					"value": ""
+				},
+
+				{
+					"name": "expiry",
+					"description": "In minutes, default 1 year",
+					"type": "number",
+					"required": false,
+					"value": 525600
+				},
+				{
+					"name": "expiryext",
+					"description": "Auto extend expiry on group activity, in seconds. Default disabled",
+					"type": "number",
+					"required": false,
+					"value": 0
+				},
+
+				{
+					"name": "active",
+					"description": "1 to enable, 0 to disable",
+					"type": "number",
+					"required": false,
+					"value": 1,
+					"valueList": [1, 0]
+				}
+
+			]
+		},
+
+		{
+			"op" : "groupeditmembers",
+			"type": "group",
+			"title" : "Add or Remove Group Members",
+			"description": "Add or Remove Group Members using GID obtained in the group <code>add</code> operation. <br> To know about setting the group permissions per message type, see <a href='https://mesibo.com/documentation/api/backend-api/#group-permissions-per-message-type' target='_blank'>here</a>",
+			"requestUrl": "",
+			"params": [
+
+				{
+					"name": "gid",
+					"description": "Group ID (GID)",
+					"type": "number",
+					"required": true
+				},
+				{
+					"name": "delete",
+					"description": "0 to add members, 1 to remove members",
+					"type": "number",
+					"required": true,
+					"value": 0
+				},
+				{
+					"name": "m",
+					"description": "comma-separated list of user addresses to add or remove in the group",
+					"type": "string",
+					"required": true,
+					"value": ""
+				},
+				{
+					"name": "type",
+					"description": "Group Permissions per message type",
+					"type": "number",
+					"required": false
+				},
+
+				{
+					"name": "cs",
+					"description": "1 if members being added can send messages to the group, 0 for not",
+					"type": "number",
+					"required": false,
+					"valueList":[ 1, 0]
+				},
+				{
+					"name": "cr",
+					"description": "1 if members being added can receive group messages, 0 for not",
+					"type": "number",
+					"required": false,
+					"valueList":[ 1, 0]
+				},
+				{
+					"name": "canpub",
+					"description": "[group calling] 1 if members being added can make (publish) group voice or video calls, 0 for not",
+					"type": "number",
+					"required": false,
+					"valueList":[ 0, 1]
+				},
+				{
+					"name": "cansub",
+					"description": "[group calling] 1 if members being added can subscribe to group voice or video calls, 0 for not",
+					"type": "number",
+					"required": false,
+					"valueList":[ 0, 1]
+				},
+				{
+					"name": "canlist",
+					"description": "[group calling] 1 if members being added can get a list of active callers in the group, 0 for not",
+					"type": "number",
+					"required": false,
+					"valueList":[ 0, 1]
+				}
+
+			]
+		},
+
+		{
+			"op" : "groupdel",
+			"type": "group",
+			"title" : "Delete a Group",
+			"description": "Delete an existing group using GID obtained in the group add operation.",
+			"requestUrl": "",
+			"params": [
+				{
+					"name": "gid",
+					"description": "Group ID (GID)",
+					"type": "number",
+					"required": true
+				}
+			]
+		},
+
+		{
+			"op" : "groupgetmembers",
+			"type": "group",
+			"title" : "Get Group Members",
+			"description":"Get Group Members using GID obtained in the group add operation.This API is only for development purpose only and hence maximum 20 users will be returned. You should store your group members locally instead of obtaining from the mesibo.",
+			"requestUrl": "",
+			"params": [
+				{
+					"name": "gid",
+					"description": " Group ID (GID)",
+					"type": "number",
+					"required": true
+				},
+				{
+					"name": "count",
+					"description": "Max number of users to get. Max 20",
+					"type": "number",
+					"required": true,
+					"value": 20
+				}
+			]
+		}
+
+	]
+}
