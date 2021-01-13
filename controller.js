@@ -592,20 +592,15 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 
 		if(param.name === "appid"){
 
-			var platform = $scope.selected_platform[param.name];
-			var contains_dot = false;
-
-			if(typeof value === "string"){
-				for (var i = 0; i < value.length; i++) {
-					if(!isNaN(value[i])){
-						return RESULT_FAIL_APPID_NAN;
-					}
-
-					if(value[i] == ".")
-						contains_dot = true;					
-				}
+			var platform = param.platform;
+			if(!isNaN(value)){
+				return RESULT_FAIL_APPID_NAN;
 			}
 
+			var contains_dot = false;
+			if(value[3] && "." == value[3])
+				contains_dot = true;
+		
 			if(platform && !contains_dot){		
 				if(platform == "Android"){
 					return RESULT_FAIL_APPID_DOTS;
@@ -632,8 +627,9 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 
 		var value = param.value;
 
-		console.log("checkValidParam", param, value);
+		
 		var result = $scope.validateParam(param, value);
+		// console.log("checkValidParam", param, value, result);
 
 		if(param.required){
 			if(RESULT_OK == result)
