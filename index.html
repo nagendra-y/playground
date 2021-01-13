@@ -52,8 +52,7 @@
     <nav class="navbar navbar-light" style="background-color: #00868b;">
       <a href="https://mesibo.com/"><img class="logo" src="https://mesibo.com/images/mesibo-logo-white.png" alt="Mesibo" title="Mesibo" style="width: 160px;"></a>        
       
-      <div class="ml-auto">
-      	 <span class="navbar-brand mb-0 h1" style="color:white; cursor: default;" ng-show="!token"> Backend API Playground </span>
+      <div class="ml-auto"> 
       	 <span style="color: white;" ng-show="app_name && app_aid">{{app_name}}({{app_aid}})</span>
 	   	 <button type="button" ng-show="token" class="btn btn-danger" onclick="window.location.reload(true);" style="align-self:right;">Logout</button>  
       </div>
