@@ -186,19 +186,20 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 			"requestUrl": "",
 			"params": [ 
 				{
+					"name": "flag",
+					"description": "Group Flags",
+					"type": "string",
+					"required": true,
+					"value": "0",
+				},
+				{
 					"name": "name",
 					"description": "Group Name",
 					"type": "string",
 					"required": false,
 					"value": ""
 				},
-				{
-					"name": "flag",
-					"description": "Group Flags",
-					"type": "string",
-					"required": false,
-					"value": "0",
-				},
+				
 				{
 					"name": "expiry",
 					"description": "In minutes, default 1 year",
