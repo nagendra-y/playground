@@ -636,7 +636,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 				param.error = "";
 
 			if(RESULT_FAIL == result)
-				param.error = "Enter a valid input";		
+				param.error = "Enter a valid value";		
 
 			if(RESULT_FAIL_APPID_NAN == result)
 				param.error = "Enter a non-numeric string value";
