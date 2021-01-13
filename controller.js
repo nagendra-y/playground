@@ -641,8 +641,12 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 			if(RESULT_FAIL_APPID_NAN == result)
 				param.error = "Enter a non-numeric string value";
 			
-			if(RESULT_FAIL_APPID_DOTS == result)
-				param.error = "Enter a valid Package Name/Bundle ID. Example, com.mesibo.firstapp";
+			if(RESULT_FAIL_APPID_DOTS == result){
+				if(param.platform == "Android")
+					param.error = "Enter a valid Package Name. Example, com.mesibo.androidapp";
+				else
+					param.error = "Enter a valid Bundle id. Example, com.mesibo.iosapp";
+			}
 		}		
 		
 		$scope.$applyAsync();
