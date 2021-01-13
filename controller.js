@@ -52,22 +52,22 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 				},
 				{
 					"name": "appid",
-					"description": "Android Package Name. The generated token will be applicable for the app having this package name only",
+					"description": "Android package name declared in the AndroidManifest.xml. The generated token will be applicable for the app having this package name only",
 					"alt":
 					{
 						"Android": 
 						{
-							"description": "Android Package Name. The generated token will be applicable for the app having this package name only",
+							"description": "Android package name declared in the AndroidManifest.xml. The generated token will be applicable for the app having this package name only",
 							"placeholder": "Example, com.mesibo.androidapp"
 						},
 						"iOS": 
 						{ 
-							"description": "iOS Bundle ID. The generated token will be applicable for the app having this Bundle id only",
+							"description": "iOS Bundle id declared in the Xcode project. The generated token will be applicable for the app having this Bundle id only",
 							"placeholder": "Example, com.mesibo.iosapp"
 						},
 
 						"Other": {
-							"description":"In case of other platforms like Web, Desktop, etc. Pass any unique string. Ensure that same need to be passed to setAppName function",
+							"description":"For all other platforms, you can pass any non-numeric string (for example, com.yourdomain.yourapp), and the same need to be passed to setAppName function.",
 							"placeholder": "Example, web"
 						},
 					},
