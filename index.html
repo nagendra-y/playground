@@ -40,6 +40,12 @@
 		.navbar-nav li img {
 		    vertical-align: bottom;
 		}
+
+		.btn:focus,.btn:active {
+		   outline: none !important;
+		   box-shadow: none;
+		   -webkit-box-shadow: none
+		}
     </style>
   </head>
   <body ng-cloak="apis" ng-app="MesiboPlayground" id="mesiboapiplay" ng-controller="AppController">
@@ -72,7 +78,7 @@
         <div class="card" id="api-card-{{$index}}" style="box-shadow: 0 0 3px rgba(0,0,0,.19); border-radius: 4px; border: 1px solid #000;border-color: #49cc90;background: rgba(73,204,144,.1);">
           <div class="card-header" id="heading-$index" style="background-color: #00868b">
             <h5 class="mb-0">
-              <button class="btn" style="background-color: transparent; color: white;" data-toggle="collapse" data-target="#collapse-{{$index}}" aria-expanded="false" aria-controls="collapse-{{$index}}">
+              <button class="btn" style="background-color: transparent; color: white; width: 100%; text-align: left; border: none;" data-toggle="collapse" data-target="#collapse-{{$index}}" aria-expanded="false" aria-controls="collapse-{{$index}}">
               {{apis[$index].title}}
               </button>
             </h5>
