@@ -28,6 +28,9 @@ const RESULT_FAIL_APPID_DOTS = 12;
 playground.controller('AppController', ['$scope', '$window', '$compile', '$timeout', '$anchorScroll', function ($scope, $window, $compile, $timeout, $anchorScroll) {
 	$scope.root = "https://api.mesibo.com/api.php";
 	$scope.token = null;
+	$scope.app_name = null;
+	$scope.app_aid = 0;
+
 	$scope.selected_platform = {};
 
 	$scope.apis = [];
@@ -40,13 +43,6 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 			"description": "To enable real-time communication between your users, you need to let mesibo know about each of your users. Mesibo will create an access token for each user and give it to you which you can send it to your users. Your user can then use this access token in Mesibo Real-time APIs using setAccessToken function.",
 			"requestUrl": "",
 			"params": [ 
-				{
-					"name": "name",
-					"description": "User Name",
-					"type": "string",
-					"required": false,
-					"value": ""
-				},
 				{
 					"name": "addr",
 					"description": "User Address (e.g phone number, email address, etc.)",
@@ -83,13 +79,21 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"value": ""
 				},
 				{
+					"name": "name",
+					"description": "User Name",
+					"type": "string",
+					"required": false,
+					"value": ""
+				},
+				
+				
+				{
 					"name": "expiry",
 					"description": "In minutes, default 1 year",
 					"type": "number",
 					"required": false,
 					"value": 525600 
 				},
-
 				{
 					"name": "active",
 					"description": "Enable user, default 1 (active)",
@@ -97,7 +101,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"required": false,
 					"value": 1,
 					"valueList": [1, 0]
-				},
+				}
 			],
 		},
 
@@ -192,9 +196,8 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"name": "flag",
 					"description": "Group Flags",
 					"type": "string",
-					"required": true,
+					"required": false,
 					"value": "0",
-					"valueList": ["0", "1", "0x20", "0x40", "0x80"]
 				},
 				{
 					"name": "expiry",
@@ -237,6 +240,13 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"required": true,					
 				},
 				{
+					"name": "flag",
+					"description": "Group Flags",
+					"type": "string",
+					"required": true,
+					"value": "0",
+				},
+				{
 					"name": "type",
 					"description": "Group Permissions per message type",
 					"type": "number",
@@ -249,14 +259,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"required": false,
 					"value": ""
 				},
-				{
-					"name": "flag",
-					"description": "Group Flags",
-					"type": "string",
-					"required": true,
-					"value": "0",
-					"valueList": ["0", "1", "0x20", "0x40", "0x80"]
-				},
+				
 				{
 					"name": "expiry",
 					"description": "In minutes, default 1 year",
@@ -291,6 +294,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 			"description": "Add or Remove Group Members using GID obtained in the group <code>add</code> operation. <br> To know about setting the group permissions per message type, see <a href='https://mesibo.com/documentation/api/backend-api/#group-permissions-per-message-type' target='_blank'>here</a>",
 			"requestUrl": "",
 			"params": [ 
+
 				{
 					"name": "gid",
 					"description": "Group ID (GID)",
@@ -298,10 +302,11 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"required": true,					
 				},
 				{
-					"name": "type",
-					"description": "Group Permissions per message type",
+					"name": "delete",
+					"description": "0 to add members, 1 to remove members",
 					"type": "number",
-					"required": false,					
+					"required": true,
+					"value": 0
 				},
 				{
 					"name": "m",
@@ -309,7 +314,14 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"type": "string",
 					"required": true,
 					"value": ""
+				},	
+				{
+					"name": "type",
+					"description": "Group Permissions per message type",
+					"type": "number",
+					"required": false,					
 				},
+				
 				{
 					"name": "cs",
 					"description": "1 if members being added can send messages to the group, 0 for not",
@@ -344,14 +356,7 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 					"type": "number",
 					"required": false,
 					"valueList":[ 0, 1]
-				},
-				{
-					"name": "delete",
-					"description": "0 to add members, 1 to remove members",
-					"type": "number",
-					"required": true,
-					"value": 0
-				}		
+				}					
 
 			]
 		},
@@ -412,6 +417,16 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 		$timeout(function()  {
                // document.getElementById("api-card-0").scrollIntoView();
         });
+	}
+
+	$scope.getReqColor = function(p){
+		if(!p)
+			return;
+
+		if(p.required)
+			return 'red';
+
+		return 'blue';
 	}
 
 	$scope.getRequestUrl = function(api){
@@ -538,10 +553,16 @@ playground.controller('AppController', ['$scope', '$window', '$compile', '$timeo
 				try{
 					if(data.result){
 						$scope.token = token;
-						$scope.initApis($scope.apiJson);						
+						$scope.initApis($scope.apiJson);
+						if(data["app"]){
+							$scope.app_name = data["app"]["name"];
+							$scope.app_aid = data["app"]["aid"];
+						}							
 					}
 					else{
+
 						$scope.token = null;
+						$scope.token_error = true;
 					}
 
 					$scope.$applyAsync();

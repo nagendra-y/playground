@@ -47,7 +47,8 @@
       <a href="https://mesibo.com/"><img class="logo" src="https://mesibo.com/images/mesibo-logo-white.png" alt="Mesibo" title="Mesibo" style="width: 160px;"></a>        
       
       <div class="ml-auto">
-      	 <span class="navbar-brand mb-0 h1" style="color:white; cursor: default;"> Backend API Playground </span>
+      	 <span class="navbar-brand mb-0 h1" style="color:white; cursor: default;" ng-show="!token"> Backend API Playground </span>
+      	 <span style="color: white;" ng-show="app_name && app_aid">{{app_name}}({{app_aid}})</span>
 	   	 <button type="button" ng-show="token" class="btn btn-danger" onclick="window.location.reload(true);" style="align-self:right;">Logout</button>  
       </div>
      
@@ -55,13 +56,15 @@
     <br ng-if="!token">
     <div class="mx-5">      
       <div ng-show="!token">
-      	<p>This is an interactive playground for trying out <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/documentation/api/backend-api">Mesibo Backend APIs</a>.<br>
-        You need to enter an <code>Application token</code> before you can use the API Playground. Get the token from your <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/console">Console</a><br>
+      	<p>This is an interactive playground for trying out <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/documentation/api/backend-api">Mesibo Backend APIs</a>. Mesibo backend APIs allow you to administer your account, manage apps, manage users and groups etc. Mesibo backend API is a REST based API which you can access using any language of your choice.</p>
+
+      	<p>You need to enter an <code>Application token</code> before you can use the API Playground. Get the token from your <a rel="noopener noreferrer" target="_blank" href="https://mesibo.com/console">Console</a>.</p>
 	      <img  id="img-apptoken" src="app-token.jpg" width="600">
 	      <div class="form-group">
 	        <label for="usr"><strong>Enter the App Token:</strong></label>
 	        <input style="width:900px;" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" type="text" class="form-control" id="apptoken">
-	      </div>
+	      	<span style="color: red;" ng-show= "token_error "id="token-error"> Enter a valid token </span>
+	      </div>	      
 	      <button type="button" id="save-token-button" class="btn btn-success" ng-click="setToken()"><i class="fa fa-rocket" aria-hidden="true"></i> Get Started</button>
       </div>
       <div id="accordion" ng-repeat="a in apis track by $index" style="margin-top: 5px;">
@@ -93,7 +96,7 @@
 	                  	<span ng-show="p.error" style="color: red; color:red; font-size: 10px; font-family: 'monospace';">{{p.error}}</span>
 		                <div class="input-group mb-3 my-1">
 		                	<div class="input-group-prepend">
-		                      <span class="input-group-text" >{{p.name}}<sup ng-if="p.required" style="color:red; font-size: 10px; font-family: 'monospace';" > &nbsp; *required</sup></span>
+		                      <span class="input-group-text" >{{p.name}}<sup ng-init="p.req = p.required ? 'required' : 'optional' " ng-style="{'color':getReqColor(p)}" style="font-size: 10px; font-family: 'monospace';" > &nbsp; *{{p.req}}</sup></span>
 		                    </div>
 		                    <input type="text" class="form-control" placeholder="{{p.placeholder}}" ng-blur="checkValidParam(a, p)" ng-change="checkValidParam(a, p); a.requestUrl = getRequestUrl(a)" ng-if="p.type == 'string' && !p.valueList" custom-autofocus="$first" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
 		                    <input type="number" class="form-control" placeholder="{{p.placeholder}}" ng-blur="checkValidParam(a, p)" ng-change="checkValidParam(a, p);a.requestUrl = getRequestUrl(a)"  ng-if="p.type == 'number' && !p.valueList" custom-autofocus="$first" id="input-param-{{a.op}}-{{p.name}}" ng-model="p.value" ng-required="p.required">
